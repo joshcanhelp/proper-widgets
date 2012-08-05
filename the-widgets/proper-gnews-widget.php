@@ -15,7 +15,7 @@ class proper_gnews_widget extends WP_Widget {
 				'label' => 'Title',
 				'type' => 'text',
 				'id' => 'title',
-				'description' => '',
+				'description' => 'Enter a title for this widget or leave blank for no title',
 				'default' => 'Google News',
 			),		
 			array(
@@ -50,7 +50,7 @@ class proper_gnews_widget extends WP_Widget {
 				'label' => 'Cache duration (minutes)',
 				'type' => 'number',
 				'id' => 'cache_duration',
-				'description' => '',
+				'description' => 'How long should this feed be cached? A longer cache will lead to a faster page load',
 				'default' => 30,
 			),
 			

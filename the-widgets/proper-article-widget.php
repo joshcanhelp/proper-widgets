@@ -15,14 +15,14 @@ class proper_article_widget extends WP_Widget {
 				'label' => 'Title *',
 				'type' => 'text',
 				'id' => 'title',
-				'description' => '',
+				'description' => 'Enter a title for this widget or leave blank for no title',
 				'default' => '',
 			),		
 			array(
 				'label' => 'Subtitle',
 				'type' => 'text',
 				'id' => 'subtitle',
-				'description' => '',
+				'description' => 'Add an italic subtitle, if you\'d like',
 				'default' => '',
 			),
 			array(
@@ -33,10 +33,10 @@ class proper_article_widget extends WP_Widget {
 				'default' => '',
 			),
 			array(
-				'label' => 'Link to *',
+				'label' => 'Read More link',
 				'type' => 'url',
 				'id' => 'link',
-				'description' => '',
+				'description' => 'Add a link here to display "Read More" after the blurb',
 				'default' => '',
 			),
 			
@@ -62,8 +62,10 @@ class proper_article_widget extends WP_Widget {
 		
 		echo isset($body) && !empty($body) ? wpautop($body) : '';
 		
+		echo isset($link) && !empty($link) ? '
+		<a href="' . $link . '" class="read-more">Read More &raquo;</a>' : '';
+		
 		echo '
-				<a href="' . $link . '" class="read-more">More &raquo;</a>
 		</div>
 		' . $after_widget;
 			

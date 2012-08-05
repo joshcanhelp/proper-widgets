@@ -15,7 +15,7 @@ class proper_authors_widget extends WP_Widget {
 				'label' => 'Title',
 				'type' => 'text',
 				'id' => 'title',
-				'description' => 'Enter a title for this widget or leave blank to omit',
+				'description' => 'Enter a title for this widget or leave blank for no title',
 				'default' => ''
 			),		
 			array(

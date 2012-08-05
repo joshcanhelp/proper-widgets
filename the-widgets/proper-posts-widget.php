@@ -27,18 +27,18 @@ class proper_posts_widget extends WP_Widget {
 		
 		$this->widget_fields = array(
 			array(
-				'label' => 'Title *',
+				'label' => 'Title',
 				'type' => 'text',
 				'id' => 'title',
-				'description' => '',
-				'default' => '',
+				'description' => 'Enter a title for this widget or leave blank for no title',
+				'default' => 'Posts',
 			),		
 			array(
 				'label' => 'Category',
 				'type' => 'select',
 				'id' => 'category',
 				'options' => $post_cats,
-				'description' => '',
+				'description' => 'Select the category of posts to display',
 				'default' => '',
 			),
 			array(
@@ -53,7 +53,7 @@ class proper_posts_widget extends WP_Widget {
 				'label' => 'Offset',
 				'type' => 'number',
 				'id' => 'offset',
-				'description' => '',
+				'description' => 'The number of posts to offset on this list',
 				'default' => '0',
 			),
 			

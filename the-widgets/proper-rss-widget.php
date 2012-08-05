@@ -15,14 +15,14 @@ class proper_rss_widget extends WP_Widget {
 				'label' => 'Title',
 				'type' => 'text',
 				'id' => 'title',
-				'description' => '',
+				'description' => 'Enter a title for this widget or leave blank for no title',
 				'default' => 'RSS Feed',
 			),		
 			array(
 				'label' => 'RSS URL',
 				'type' => 'url',
 				'id' => 'rss_url',
-				'description' => '',
+				'description' => 'A direct link to a valid RSS or ATOM feed',
 				'default' => ''
 			),
 			array(
@@ -33,14 +33,14 @@ class proper_rss_widget extends WP_Widget {
 				'default' => get_option('posts_per_page'),
 			),
 			array(
-				'label' => 'Show blurb (if available)',
+				'label' => 'Show blurb (if available)?',
 				'type' => 'checkbox',
 				'id' => 'show_blurb',
 				'description' => '',
 				'default' => 'yes',
 			),
 			array(
-				'label' => 'Show date (if available)',
+				'label' => 'Show date (if available)?',
 				'type' => 'checkbox',
 				'id' => 'show_date',
 				'description' => '',
@@ -64,7 +64,7 @@ class proper_rss_widget extends WP_Widget {
 				'label' => 'Cache duration (minutes)',
 				'type' => 'number',
 				'id' => 'cache_duration',
-				'description' => '',
+				'description' => 'How long should this feed be cached? A longer cache will lead to a faster page load',
 				'default' => 30,
 			),
 			

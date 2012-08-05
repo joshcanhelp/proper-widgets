@@ -16,27 +16,29 @@ class proper_links_widget extends WP_Widget {
 			'hide_empty' => 0
 		)); 
 		
-		$link_cats = array();
+		$link_cats = array(
+			'all' => 'All'
+		);
 		foreach($categories as $category) $link_cats[$category->term_id] = $category->name;
 		
 		$this->widget_fields = array(
 			array(
-				'label' => 'Title *',
+				'label' => 'Title',
 				'type' => 'text',
 				'id' => 'title',
-				'description' => '',
-				'default' => '',
+				'description' => 'Enter a title for this widget or leave blank for no title',
+				'default' => 'Links',
 			),		
 			array(
-				'label' => 'Link Category',
+				'label' => 'Link category',
 				'type' => 'select',
 				'id' => 'category',
 				'options' => $link_cats,
-				'description' => '',
+				'description' => 'Select the category of links to display',
 				'default' => '',
 			),
 			array(
-				'label' => 'Orderby',
+				'label' => 'Order links by',
 				'type' => 'select',
 				'id' => 'orderby',
 				'options' => array(
@@ -67,10 +69,12 @@ class proper_links_widget extends WP_Widget {
 		echo '
 		<ul class="proper-wp-links proper-links-list links-category-' . $category . '">';
 	
-		$links = get_bookmarks(array(
-			'orderby' => $orderby,
-			'category' => $category
-		));
+		$link_args['orderby'] = $orderby;
+		
+		if ($category !== 'all') 
+			$link_args['category'] = $category;
+			
+		$links = get_bookmarks($link_args);
 		
 		foreach ($links as $link) :
 			echo '

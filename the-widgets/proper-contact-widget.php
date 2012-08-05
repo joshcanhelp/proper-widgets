@@ -15,7 +15,7 @@ class proper_contact_widget extends WP_Widget {
 				'label' => 'Title *',
 				'type' => 'text',
 				'id' => 'title',
-				'description' => '',
+				'description' => 'Enter a title for this widget or leave blank for no title',
 				'default' => 'Contact Us',
 			),		
 			array(
