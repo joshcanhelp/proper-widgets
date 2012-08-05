@@ -19,6 +19,7 @@ require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-article-widget.ph
 require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-posts-widget.php');
 
 // Coming soon: require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-contact-widget.php');
+// Coming soon: require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-authors-widget.php');
 
 /*
 Builds all widget admin forms
