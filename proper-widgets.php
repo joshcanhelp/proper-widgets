@@ -10,13 +10,33 @@ Author URI: http://theproperweb.com
 License: GPLv2 or later
 */
 
-require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-article-widget.php');
-require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-rss-widget.php');
-require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-gnews-widget.php');
-require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-linked-image-widget.php');
-require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-links-widget.php');
-require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-article-widget.php');
-require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-posts-widget.php');
+require_once('settings.php');
+
+// Custom plugin settings
+global $pwidget_options_saved;
+$pwidget_options_saved = get_option('pwidget_settings_array');
+
+require_once('settings.php');
+
+// Require widget files if settings allow for it
+
+if ($pwidget_options_saved['widget_article'] === 'yes')
+	require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-article-widget.php');
+	
+if ($pwidget_options_saved['widget_gnews'] === 'yes')
+	require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-gnews-widget.php');
+
+if ($pwidget_options_saved['widget_linkedimg'] === 'yes')
+	require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-linked-image-widget.php');
+
+if ($pwidget_options_saved['widget_links'] === 'yes')
+	require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-links-widget.php');
+
+if ($pwidget_options_saved['widget_posts'] === 'yes')
+	require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-posts-widget.php');
+
+if ($pwidget_options_saved['widget_rss'] === 'yes')
+	require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-rss-widget.php');
 
 // Coming soon: require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-contact-widget.php');
 // Coming soon: require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-authors-widget.php');
