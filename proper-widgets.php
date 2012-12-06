@@ -1,10 +1,10 @@
 <?php 
 
 /*
-Plugin Name: Proper. Widgets.
-Plugin URI: http://theproperweb.com/code/plugins/omg-widgets
+Plugin Name: PROPER Widgets DEV
+Plugin URI: http://theproperweb.com/shipped/wp/proper-widgets
 Description: More widgets than you can shake a stick at.
-Version: 0.9
+Version: 0.9.1
 Author: Proper Web Development
 Author URI: http://theproperweb.com
 License: GPLv2 or later
@@ -37,6 +37,22 @@ if ($pwidget_options_saved['widget_posts'] === 'yes')
 
 if ($pwidget_options_saved['widget_rss'] === 'yes')
 	require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-rss-widget.php');
+	
+// Hide core widgets
+function pwidget_unregister_widgets() {
+	
+	global $pwidget_options_saved;
+	
+	if ($pwidget_options_saved['widget_core_links'] !== 'yes')
+		unregister_widget('WP_Widget_Links');
+	
+	if ($pwidget_options_saved['widget_core_posts'] !== 'yes')
+		unregister_widget('WP_Widget_Recent_Posts');
+	
+	if ($pwidget_options_saved['widget_core_rss'] !== 'yes')
+		unregister_widget('WP_Widget_RSS');
+}
+add_action('widgets_init', 'pwidget_unregister_widgets', 1);
 
 // Coming soon: require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-contact-widget.php');
 // Coming soon: require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-authors-widget.php');
