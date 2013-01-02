@@ -96,7 +96,7 @@ class proper_gnews_widget extends WP_Widget {
 		$gn_query = str_replace(' ', '+', $gn_query);
 		$feed_args['url'] = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&q='.$gn_query.'&cf=all&output=rss';
 		
-		$feed_content = proper_fetch_rss($feed_args);
+		$feed_content = proper_widget_fetch_rss($feed_args);
 	
 		if (is_array($feed_content) && count($feed_content) > 0) {
 			

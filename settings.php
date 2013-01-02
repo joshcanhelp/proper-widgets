@@ -61,6 +61,13 @@ $pwidget_options = array(
 		'checkbox',
 		'yes',
 	),
+    array(
+        'Proper Video Widget',
+        'widget_video',
+        '',
+        'checkbox',
+        'yes',
+    ),
 	array(
 		'Core widgets to show',
 		'',

@@ -16,7 +16,9 @@ class proper_posts_widget extends WP_Widget {
 			'hide_empty' => 0
 		)); 
 		
-		$post_cats = array();
+		$post_cats = array(
+		    'all' => '- All -'
+		);
 		foreach($categories as $category) $post_cats[$category->term_id] = $category->name;
 		
 		$defaults = array(
@@ -31,7 +33,7 @@ class proper_posts_widget extends WP_Widget {
 				'type' => 'text',
 				'id' => 'title',
 				'description' => 'Enter a title for this widget or leave blank for no title',
-				'default' => 'Posts',
+				'default' => 'Posts'
 			),		
 			array(
 				'label' => 'Category',
@@ -39,22 +41,28 @@ class proper_posts_widget extends WP_Widget {
 				'id' => 'category',
 				'options' => $post_cats,
 				'description' => 'Select the category of posts to display',
-				'default' => '',
+				'default' => ''
 			),
 			array(
 				'label' => '# of items to show',
 				'type' => 'number',
 				'id' => 'num_posts',
 				'description' => '',
-				'default' => get_option('posts_per_page'),
+				'default' => get_option('posts_per_page')
 			),
-			
+            array(
+                'label' => 'Excerpt length',
+                'type' => 'number',
+                'id' => 'excerpt_len',
+                'description' => 'Length of the excerpt to show. Leave this as 0 to not display an excerpt.',
+                'default' => 0
+            ),
 			array(
 				'label' => 'Offset',
 				'type' => 'number',
 				'id' => 'offset',
 				'description' => 'The number of posts to offset on this list',
-				'default' => '0',
+				'default' => 0
 			),
 			
 		);
@@ -92,12 +100,25 @@ class proper_posts_widget extends WP_Widget {
 		if (!empty($the_posts)) :
 			
 			foreach ($the_posts as $a_post) :
+
+                $the_excerpt = '';
+                if ($excerpt_len) {
+                    $the_excerpt = !empty($a_post->post_excerpt) ?
+                        $a_post->post_excerpt :
+                        strip_tags($a_post->post_content);
+                    $the_excerpt = substr($the_excerpt, 0, $excerpt_len) . ' ...';
+                }
 				
 				echo '
 			<li class="the-content">
-				<a href="' . get_permalink($a_post->ID).'" title="' . $a_post->post_title . '">' . $a_post->post_title . '</a>
-				' . wpautop($a_post->post_excerpt) . '
-			</li>';
+				<p><a href="' . get_permalink($a_post->ID).'" title="' . $a_post->post_title . '">' .
+				$a_post->post_title . '</a>';
+
+            if ( !empty( $the_excerpt ) )
+                echo '<br>' . $the_excerpt;
+
+		    echo '</p>
+		    </li>';
 				
 			endforeach;
 	
@@ -114,12 +135,11 @@ class proper_posts_widget extends WP_Widget {
 		
 		$instance = $old_instance;
 
-		// Storing widget title as inputted option or category name
-		
 		$instance['title'] = apply_filters('widget_title', strip_tags($new_instance['title']));
 		
 		$instance['category'] = $new_instance['category'];
-	
+
+        $instance['excerpt_len'] = filter_var($new_instance['excerpt_len'], FILTER_SANITIZE_NUMBER_INT);
 		$instance['num_posts'] = filter_var($new_instance['num_posts'], FILTER_SANITIZE_NUMBER_INT);
 		$instance['offset'] = filter_var($new_instance['offset'], FILTER_SANITIZE_NUMBER_INT);
 

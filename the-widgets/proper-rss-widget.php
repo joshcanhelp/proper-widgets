@@ -113,7 +113,7 @@ class proper_rss_widget extends WP_Widget {
 		if ($target == 'yes') $link_insert .= ' target="_blank"';
 		if ($link_rel == 'yes') $link_insert .= ' rel="nofollow"';
 		
-		$feed_content = proper_fetch_rss($feed_args);
+		$feed_content = proper_widget_fetch_rss($feed_args);
 		
 		if (is_array($feed_content) && count($feed_content) > 0) :
 	

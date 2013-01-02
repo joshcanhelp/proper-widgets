@@ -18,12 +18,16 @@ Proper Widgets are well-coded, useable widgets for any WordPress installation. I
 * Links Widget: to display a list of links using the core WordPress links functionality (better implementation of the core Links widget)
 * Posts Widget: to display a list of posts (better implementation of the core Recent Posts widget)
 * RSS Widget: to display a list of links from any RSS feed (better implementation of the core RSS widget)
+* Video widget to display a YouTube or Vimeo embed anywhere on the site
+
 * Ability to hide or display each of the widgets above
+* Ability to hide core widgets being replaced by this plugin
 
 Coming soon:
 
 * Authors Widget: to display a list of authors with images and other data
 * Contact Widget: to display a contact form anywhere on the site
+* Comments Widget: to display a contact form anywhere on the site
 
 Get the absolute latest at the [https://github.com/joshcanhelp/proper-widgets](Github repo)
 
