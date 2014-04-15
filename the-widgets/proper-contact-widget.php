@@ -75,7 +75,7 @@ class proper_contact_widget extends WP_Widget {
 		if(!empty($_POST['submit_type'])) include(TEMPLATEPATH . '/inc/process-contact.php');
 		 
 		//If the email was sent, show "thank you"
-		if(isset($email_sent) && $email_sent === true) :
+		if(isset($email_sent) && $email_sent === TRUE) :
 		
 			echo '<p class="link-content success">' . $text_thanks . '</p>';
 		
@@ -163,8 +163,7 @@ class proper_contact_widget extends WP_Widget {
 			$this->widget_fields[$i]['field_id'] = $this->get_field_id($field_id);
 			$this->widget_fields[$i]['field_name'] = $this->get_field_name($field_id);
 		endfor;
-	
-		proper_output_widget_fields($this->widget_fields, $instance);
+		proper_widgets_output_fields($this->widget_fields, $instance);
 		
 	}
 }

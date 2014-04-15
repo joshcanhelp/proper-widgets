@@ -2,9 +2,9 @@
 
 /*
 Plugin Name: PROPER Widgets
-Plugin URI: http://theproperweb.com/shipped/wp/proper-widgets
+Plugin URI: http://theproperweb.com/code/wp/proper-widgets
 Description: More widgets than you can shake a stick at.
-Version: 0.9.1
+Version: 0.9.3
 Author: PROPER Web Development
 Author URI: http://theproperweb.com
 License: GPLv2 or later
@@ -38,8 +38,11 @@ if ($pwidget_options_saved['widget_posts'] === 'yes')
 if ($pwidget_options_saved['widget_rss'] === 'yes')
 	require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-rss-widget.php');
 
-if ($pwidget_options_saved['widget_video'] === 'yes')
+if ( isset ( $pwidget_options_saved[ 'widget_video' ]) && $pwidget_options_saved['widget_video'] === 'yes')
     require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-video-widget.php');
+
+// Coming soon: require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-contact-widget.php');
+// Coming soon: require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-authors-widget.php');
 	
 // Hide core widgets
 function pwidget_unregister_widgets() {
@@ -56,9 +59,6 @@ function pwidget_unregister_widgets() {
 		unregister_widget('WP_Widget_RSS');
 }
 add_action('widgets_init', 'pwidget_unregister_widgets', 1);
-
-// Coming soon: require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-contact-widget.php');
-// Coming soon: require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-authors-widget.php');
 
 /*
  * Helper functions
@@ -81,7 +81,7 @@ function proper_widget_truncate($string, $limit, $break = " ") {
 /*
 Builds all widget admin forms
 */
-function proper_output_widget_fields($fields, $instance) {
+function proper_widgets_output_fields($fields, $instance) {
 	
 	$label_style = 'style="font-weight: bold; display: block; margin: 0 0 4px"';
 	
@@ -162,11 +162,11 @@ function proper_widget_fetch_rss($feed_args) {
 	
 	// default settings if none are present in the args passed
 	$defaults = array(
-		'get_link' => true,
-		'get_title' => true,
-		'get_blurb' => false,
-		'get_date' => false,
-		'enable_cache' => true,
+		'get_link' => TRUE,
+		'get_title' => TRUE,
+		'get_blurb' => FALSE,
+		'get_date' => FALSE,
+		'enable_cache' => TRUE,
 		'cache_duration' => 1800,
 		'items' => 10
 	);

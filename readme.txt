@@ -1,5 +1,5 @@
 === Proper Widgets ===
-Contributors: properwp
+Contributors: properwp, joshcanhelp
 Donate link: 
 Tags: widgets, posts widget, links widget, rss widget, google news widget
 Requires at least: 3.0
@@ -19,7 +19,6 @@ Proper Widgets are well-coded, useable widgets for any WordPress installation. I
 * Posts Widget: to display a list of posts (better implementation of the core Recent Posts widget)
 * RSS Widget: to display a list of links from any RSS feed (better implementation of the core RSS widget)
 * Video widget to display a YouTube or Vimeo embed anywhere on the site
-
 * Ability to hide or display each of the widgets above
 * Ability to hide core widgets being replaced by this plugin
 

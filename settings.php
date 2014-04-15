@@ -14,55 +14,55 @@
 global $pwidget_options;
 $pwidget_options = array(
 	array(
-		'Proper Widgets to show',
+		'PROPER Widgets to show',
 		'',
 		'',
 		'title',
 		'',
 	),
 	array(
-		'Proper Article Widget',
+		'PROPER Article Widget',
 		'widget_article',
 		'',
 		'checkbox',
 		'yes',
 	),
 	array(
-		'Proper Google News Widget',
+		'PROPER Google News Widget',
 		'widget_gnews',
 		'',
 		'checkbox',
 		'yes',
 	),array(
-		'Proper Linked Image Widget',
+		'PROPER Linked Image Widget',
 		'widget_linkedimg',
 		'',
 		'checkbox',
 		'yes',
 	),
 	array(
-		'Proper Links Widget',
+		'PROPER Links Widget',
 		'widget_links',
 		'',
 		'checkbox',
 		'yes',
 	),
 	array(
-		'Proper Posts Widget',
+		'PROPER Posts Widget',
 		'widget_posts',
 		'',
 		'checkbox',
 		'yes',
 	),
 	array(
-		'Proper RSS Widget',
+		'PROPER RSS Widget',
 		'widget_rss',
 		'',
 		'checkbox',
 		'yes',
 	),
     array(
-        'Proper Video Widget',
+        'PROPER Video Widget',
         'widget_video',
         '',
         'checkbox',
@@ -127,7 +127,7 @@ function pwidget_add_admin() {
 		}
 	}
 
-	add_submenu_page('options-general.php', "Proper Widget Options", "Proper Widgets", 'edit_themes', 'pwidget-admin', 'proper_widget_admin');
+	add_submenu_page('options-general.php', "PROPER Widget Options", "PROPER Widgets", 'edit_themes', 'pwidget-admin', 'proper_widget_admin');
 
 }
 
@@ -141,7 +141,7 @@ function proper_widget_admin() {
 ?>
 	
 		<div class="wrap" id="proper-contact-options">
-			<h1>Proper Contact Form Settings</h1>
+			<h1>PROPER Widgets Settings</h1>
 			
 			<?php 
 			$doc_file = WP_PLUGIN_DIR . '/' . basename(dirname(__FILE__)) . '/inc/docs.html';
@@ -154,7 +154,7 @@ function proper_widget_admin() {
 			?>
 			
 				<div id="message" class="updated fade">
-					<p><strong>Proper Contact Form <?php echo  __('settings saved.','thematic') ?></strong></p>
+					<p><strong>PROPER Widgets <?php echo  __('settings saved.','thematic') ?></strong></p>
 				</div>
 		
 			<?php endif ?>

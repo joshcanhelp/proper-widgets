@@ -76,7 +76,7 @@ class proper_gnews_widget extends WP_Widget {
 		
 		// Build argument array for feed fetching function
 		$feed_args = array(
-			'get_date' => false,
+			'get_date' => FALSE,
 			'items' => $num_posts
 		);
 		
@@ -161,8 +161,7 @@ class proper_gnews_widget extends WP_Widget {
 			$this->widget_fields[$i]['field_id'] = $this->get_field_id($field_id);
 			$this->widget_fields[$i]['field_name'] = $this->get_field_name($field_id);
 		endfor;
-	
-		proper_output_widget_fields($this->widget_fields, $instance);
+		proper_widgets_output_fields($this->widget_fields, $instance);
 
 	}
 }
