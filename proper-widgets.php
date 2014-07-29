@@ -49,8 +49,9 @@ if ( isset ( $pwidget_options_saved[ 'widget_video' ]) && $pwidget_options_saved
 	require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-video-widget.php');
 }
 
-// require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-authors-widget.php');
+// Coming soon: require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-authors-widget.php');
 // Coming soon: require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-embed-widget.php');
+// Coming soon: require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-comments-widget.php');
 
 // Hide core widgets
 function pwidget_unregister_widgets() {

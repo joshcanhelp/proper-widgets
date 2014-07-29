@@ -1,7 +1,7 @@
-Proper Widgets
+PROPER Widgets
 =================
 
-Proper Widgets are well-coded, useable widgets for any WordPress installation. Included in this package:
+PROPER Widgets are well-coded, useable widgets for any WordPress installation. Included in this package:
 
 * Article Widget: to display a title, subtitle, blurb of text, and a link to more
 * Google News Widget: to display a feed of Google News links using a keyword or phrase
@@ -13,4 +13,6 @@ Proper Widgets are well-coded, useable widgets for any WordPress installation. I
 Coming soon:
 
 * Authors Widget: to display a list of authors with images and other data
-* Contact Widget: to display a contact form anywhere on the site
+* Comments Widget: flexible way to display comments
+* Embed Widget: use WordPress's oEmbed system to output media
+* Amazon Product Widget: 

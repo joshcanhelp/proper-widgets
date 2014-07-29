@@ -61,13 +61,27 @@ $pwidget_options = array(
 		'checkbox',
 		'yes',
 	),
-    array(
-        'PROPER Video Widget',
-        'widget_video',
-        '',
-        'checkbox',
-        'yes',
-    ),
+//	array(
+//			'PROPER Embed Widget',
+//			'widget_embed',
+//			'',
+//			'checkbox',
+//			'yes',
+//	),
+//	array(
+//			'PROPER Comments Widget',
+//			'widget_comments',
+//			'',
+//			'checkbox',
+//			'yes',
+//	),
+//	array(
+//			'PROPER Authors Widget',
+//			'widget_authors',
+//			'',
+//			'checkbox',
+//			'yes',
+//	),
 	array(
 		'Core widgets to show',
 		'',
@@ -127,7 +141,14 @@ function pwidget_add_admin() {
 		}
 	}
 
-	add_submenu_page('options-general.php', "PROPER Widget Options", "PROPER Widgets", 'edit_themes', 'pwidget-admin', 'proper_widget_admin');
+	add_submenu_page(
+		'options-general.php',
+		"PROPER Widget Options",
+		"PROPER Widgets",
+		'edit_themes',
+		'pwidget-admin',
+		'proper_widget_admin'
+	);
 
 }
 
