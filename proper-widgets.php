@@ -10,40 +10,48 @@ Author URI: http://theproperweb.com
 License: GPLv2 or later
 */
 
-require_once('settings.php');
+
+require_once( 'settings.php' );
 
 // Custom plugin settings
 global $pwidget_options_saved;
 $pwidget_options_saved = get_option('pwidget_settings_array');
 
-require_once('settings.php');
+require_once( 'settings.php' );
 
 // Require widget files if settings allow for it
 
-if ($pwidget_options_saved['widget_article'] === 'yes')
+if ($pwidget_options_saved['widget_article'] === 'yes') {
 	require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-article-widget.php');
+}
 	
-if ($pwidget_options_saved['widget_gnews'] === 'yes')
+if ($pwidget_options_saved['widget_gnews'] === 'yes') {
 	require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-gnews-widget.php');
+}
 
-if ($pwidget_options_saved['widget_linkedimg'] === 'yes')
+if ($pwidget_options_saved['widget_linkedimg'] === 'yes') {
 	require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-linked-image-widget.php');
+}
 
-if ($pwidget_options_saved['widget_links'] === 'yes')
+if ($pwidget_options_saved['widget_links'] === 'yes') {
 	require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-links-widget.php');
+}
 
-if ($pwidget_options_saved['widget_posts'] === 'yes')
+if ($pwidget_options_saved['widget_posts'] === 'yes') {
 	require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-posts-widget.php');
+}
 
-if ($pwidget_options_saved['widget_rss'] === 'yes')
+if ($pwidget_options_saved['widget_rss'] === 'yes') {
 	require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-rss-widget.php');
+}
 
-if ( isset ( $pwidget_options_saved[ 'widget_video' ]) && $pwidget_options_saved['widget_video'] === 'yes')
-    require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-video-widget.php');
+if ( isset ( $pwidget_options_saved[ 'widget_video' ]) && $pwidget_options_saved['widget_video'] === 'yes') {
+	require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-video-widget.php');
+}
 
-// Coming soon: require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-contact-widget.php');
-// Coming soon: require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-authors-widget.php');
-	
+// require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-authors-widget.php');
+// Coming soon: require_once(plugin_dir_path( __FILE__ ) . 'the-widgets/proper-embed-widget.php');
+
 // Hide core widgets
 function pwidget_unregister_widgets() {
 	
@@ -257,17 +265,4 @@ function proper_widget_output_embed ($url, $w = 500, $h = 280) {
     endswitch;
 
     return !empty($output) ? $output : 'Bad URL';
-}
-
-function proper_widget_output_youtube ($id, $w, $h) {
-    // Updated embed code 12/31/2012
-    return '<iframe width="'.$w.'" height="' . $h . '" src="http://www.youtube.com/embed/'.$id.'" frameborder="0"
-class="aligncenter" allowfullscreen></iframe>';
-
-}
-
-function proper_widget_output_vimeo ($id, $w, $h) {
-    // Updated embed code 12/31/2012
-    return '<iframe src="http://player.vimeo.com/video/'.$id.'?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="'.$w.'" height="'.$h.'" frameborder="0" class="aligncenter" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
-
 }

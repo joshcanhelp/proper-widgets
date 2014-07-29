@@ -3,12 +3,12 @@
 class proper_authors_widget extends WP_Widget {
 	
 	function proper_authors_widget() {
-		
+
 		/* Widget settings. */
 		$widget_ops = array( 'classname' => __FUNCTION__);
 
 		/* Create the widget. */
-		$this->WP_Widget( 'proper-authors-widget', 'Proper Authors', $widget_ops);
+		$this->WP_Widget( 'proper-authors-widget', 'PROPER Authors', $widget_ops);
 		
 		$this->widget_fields = array(
 			array(
@@ -20,15 +20,9 @@ class proper_authors_widget extends WP_Widget {
 			),		
 			array(
 				'label' => 'Show People',
-				'type' => 'checkbox',
+				'type' => 'select',
 				'id' => 'roles',
-				'options' => array(
-					'administrator' => 'Administrators',
-					'editor' => 'Editors',
-					'author' => 'Authors',
-					'contributor' => 'Contributors',
-					'subscriber' => 'Subscribers',
-				),
+				'options' => $this->get_roles(),
 				'description' => 'Select the roles of users that should be shown'
 			),
 			array(
@@ -90,9 +84,7 @@ class proper_authors_widget extends WP_Widget {
 		
 		$instance = $old_instance;
 
-		// Storing widget title as inputted option or category name
-		
-		$instance['title'] = apply_filters('widget_title', strip_tags($new_instance['title']));
+		$instance['title'] = sanitize_text_field( $new_instance['title'] );
 
 		return $instance;
 
@@ -108,6 +100,21 @@ class proper_authors_widget extends WP_Widget {
 		proper_widgets_output_fields($this->widget_fields, $instance);
 
 	}
+
+	function get_roles () {
+
+		global $wp_roles;
+
+		$roles = array();
+
+		foreach ( $wp_roles->roles as $id => $data ) {
+			$roles[$id] = $data['name'];
+		}
+
+		return $roles;
+
+	}
+
 }
 
 add_action( 'widgets_init', create_function('', 'return register_widget("proper_authors_widget");') );

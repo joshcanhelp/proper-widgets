@@ -8,7 +8,7 @@ class proper_article_widget extends WP_Widget {
 		$widget_ops = array( 'classname' => __FUNCTION__);
 
 		/* Create the widget. */
-		$this->WP_Widget( 'proper-article-widget', 'Proper Article', $widget_ops);
+		$this->WP_Widget( 'proper-article-widget', 'PROPER Article', $widget_ops);
 		
 		$this->widget_fields = array(
 			array(
@@ -29,7 +29,7 @@ class proper_article_widget extends WP_Widget {
 				'label' => 'Body text',
 				'type' => 'textarea',
 				'id' => 'body',
-				'description' => 'Main body of text. HTML allowed: br, strong, em',
+				'description' => 'Main body of text. HTML allowed: br, strong, em, a, em, b, br',
 				'default' => '',
 			),
 			array(
@@ -55,7 +55,7 @@ class proper_article_widget extends WP_Widget {
 		<div class="proper-widget proper-article-widget">';
 		
 		if(isset($title) && !empty($title)) 
-			echo $before_title . $title . $after_title;
+			echo $before_title . apply_filters( 'widget_title', $title ) . $after_title;
 		
 		echo isset($subtitle) && !empty($subtitle) ? '
 		<p class="proper-subtitle"><em>' . $subtitle . '</em></p>' : '';
@@ -75,11 +75,9 @@ class proper_article_widget extends WP_Widget {
 		
 		$instance = $old_instance;
 
-		$instance['title'] = apply_filters('widget_title', strip_tags($new_instance['title']));
-		
+		$instance['title'] = sanitize_text_field( $new_instance['title'] );
 		$instance['subtitle'] = sanitize_text_field($new_instance['subtitle']);
-		$instance['body'] = strip_tags($new_instance['body'], '<br><strong><em><a>');
-		
+		$instance['body'] = strip_tags($new_instance['body'], '<br><strong><em><a><b><em><br>');
 		$instance['link'] = filter_var($new_instance['link'], FILTER_VALIDATE_URL);
 
 		return $instance;

@@ -8,7 +8,7 @@ class proper_rss_widget extends WP_Widget {
 		$widget_ops = array( 'classname' => __FUNCTION__);
 
 		/* Create the widget. */
-		$this->WP_Widget( 'proper-rss-widget', 'Proper RSS', $widget_ops);
+		$this->WP_Widget( 'proper-rss-widget', 'PROPER RSS', $widget_ops);
 		
 		$this->widget_fields = array(
 			array(

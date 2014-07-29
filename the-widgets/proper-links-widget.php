@@ -8,7 +8,7 @@ class proper_links_widget extends WP_Widget {
 		$widget_ops = array( 'classname' => __FUNCTION__);
 
 		/* Create the widget. */
-		$this->WP_Widget( 'proper-links-widget', 'Proper Links', $widget_ops);
+		$this->WP_Widget( 'proper-links-widget', 'PROPER Links', $widget_ops);
 		
 		// Get link categories
 		$categories = get_categories(array (
