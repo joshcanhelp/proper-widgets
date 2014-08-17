@@ -1,10 +1,10 @@
 === Proper Widgets ===
 Contributors: properwp, joshcanhelp
-Donate link: 
+Donate link: http://theproperweb.com/code/wp/proper-widgets
 Tags: widgets, posts widget, links widget, rss widget, google news widget
 Requires at least: 3.0
-Tested up to: 3.4.2
-Stable tag: 0.9.1
+Tested up to: 4.0
+Stable tag: 1.0.0
 
 Creates easy-to-use, helpful widgets
 

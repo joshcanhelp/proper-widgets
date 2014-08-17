@@ -1,15 +1,18 @@
 <?php 
 
-class proper_gnews_widget extends WP_Widget {
-	
-	function proper_gnews_widget () {
-		
-		/* Widget settings. */
-		$widget_ops = array( 'classname' => __FUNCTION__);
+class ProperGnewsWidget extends WP_Widget {
 
-		/* Create the widget. */
+	private $css_class = 'proper-gnews-widget';
+
+	/*
+	 * Constructor called on initialize
+	 */
+	function __construct () {
+
+		$widget_ops = array( 'classname' => $this->css_class);
 		$this->WP_Widget( 'proper-gnews-widget', 'PROPER Google News Lite', $widget_ops);
-	
+
+		// Widget options
 		$this->widget_fields = array(
 			array(
 				'label' => 'Title',
@@ -57,103 +60,117 @@ class proper_gnews_widget extends WP_Widget {
 		);
 	
 	}
-	 
+
+	/*
+	 * Front-end widget output
+	 */
 	function widget($args, $instance) {
-		
-		// Pulling out all settings
-		extract($args); 
-		extract($instance); 
-		
-		// Output all wrappers
-		echo $before_widget . '
-		<div class="proper-widget proper-gnews-widget">';
-		
-		if(isset($title) && !empty($title)) 
-			echo $before_title . $title . $after_title;
-		
-		echo '
-		<ul class="proper-gnews-links proper-links-list">';
-		
-		// Build argument array for feed fetching function
+
+		// Setup feed arguments and set the number of items to show
 		$feed_args = array(
-			'get_date' => FALSE,
-			'items' => $num_posts
+			'items'    => intval( $instance['num_posts'] )
 		);
-		
+
 		// Configure cache settings
-		$feed_args['enable_cache'] = 1;
-		if ($cache_duration < 1) 
-			$feed_args['enable_cache'] = 0;
-		else 
+		$cache_duration = intval( $instance['cache_duration'] );
+		$feed_args['enable_cache'] = 0;
+		if ( ! empty( $cache_duration ) ) {
+			$feed_args['enable_cache'] = 1;
 			$feed_args['cache_duration'] = $cache_duration;
-		
+		}
+
+		// Should the date be shown?
 		$feed_args['get_date'] = 0;
-		if ($show_date == 'yes') 
+		if ( ! empty( $instance['show_date'] ) ) {
 			$feed_args['get_date'] = 1;
-		 
+		}
+
 		// Build the keyword URL and pass the whole thing to the feed fetcher
-		$gn_query = trim($keyword);
-		$gn_query = str_replace(' ', '+', $gn_query);
-		$feed_args['url'] = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&q='.$gn_query.'&cf=all&output=rss';
-		
-		$feed_content = proper_widget_fetch_rss($feed_args);
-	
-		if (is_array($feed_content) && count($feed_content) > 0) {
-			
-			$target = isset($target) ? ' target="_blank"' : '';
-	
-			foreach($feed_content as $item) :
-				
-				// Now we output the individual link
-				echo '
-				<li>
-					<a href="' . $item['link'] . '" title="'. $item['title'] . '" rel="nofollow"' . $target . '>'. $item['title'] . '</a>';
-					
-				if ($feed_args['get_date']) 
-					echo '
-					<p>' . $item['date'] . '</p>';
-				
-				echo '
-				</li>';
-		
-			endforeach;
-			
+		$gn_query         = trim( $instance['keyword'] );
+		$gn_query         = str_replace( ' ', '+', $gn_query );
+		$feed_args['url'] = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&q=' . $gn_query . '&cf=all&output=rss';
+
+		// Get the feed and check for content
+		$feed_content = proper_widget_fetch_rss( $feed_args );
+		if ( !is_array( $feed_content ) || ! count( $feed_content ) > 0 ) {
+			echo '<!-- PROPER Google News widget found no content at URL ' . $feed_args['url'] . '-->';
+			return;
+		}
+
+		// HTML output
+		echo $args['before_widget'] . '
+			<div class="proper-widget">';
+
+		$title = apply_filters( 'widget_title', $instance['title'] );
+		if ( ! empty( $title ) ) {
+			echo $args['before_title'] . $title . $args['after_title'];
 		}
 		
 		echo '
-			</ul>
-		</div>
-		'. $after_widget;
+		<ul class="proper-gnews-links proper-links-list">';
+
+		$target = ! empty( $instance['target'] ) ? ' target="_blank"' : '';
+
+		foreach ( $feed_content as $item ) {
+			echo '<li>';
+			echo '<a href="';
+			echo esc_url( $item['link'] );
+			echo '" title="';
+			echo esc_attr( $item['title']);
+			echo '" rel="nofollow"' . $target . '>';
+			echo apply_filters('the_title', $item['title']);
+			echo '</a>';
+
+			if ( $feed_args['get_date'] ) {
+				echo '<p>' . $item['date'] . '</p>';
+			}
+
+			echo '</li>';
+		}
+
+		echo '</ul></div>
+			' . $args['after_widget'];
 			
 	}
- 
+
+	/*
+	 * Sanitize and validate options
+	 */
 	function update($new_instance, $old_instance) {
 		
 		$instance = $old_instance;
 
-		$instance['title'] = apply_filters('widget_title', strip_tags($new_instance['title']));
-	
-		$instance['show_date'] = isset($new_instance['show_date']) && $new_instance['show_date'] === 'yes' ? 'yes' : ''; 
-		$instance['target'] = isset($new_instance['target']) && $new_instance['target'] === 'yes' ? 'yes' : ''; 
-		
+		$instance['title'] = sanitize_text_field( $new_instance['title'] );
+		$instance['show_date'] = intval( $new_instance['show_date'] );
+		$instance['target'] = intval( $new_instance['target'] );
 		$instance['keyword'] = sanitize_text_field($new_instance['keyword']);
-	
-		$num_posts = filter_var($new_instance['num_posts'], FILTER_SANITIZE_NUMBER_INT);
-		if (empty($num_posts) || (int)$num_posts < 1 || (int)$num_posts > 20) 
-			$instance['num_posts'] = 10;
-		else
+
+		// Set the number of posts according to widget limits
+		$num_posts = intval( $new_instance['num_posts'] );
+		if ( $num_posts < 1 ) {
+			$instance['num_posts'] = 1;
+		} else if ( $num_posts > 20 ) {
+			$instance['num_posts'] = 20;
+		} else {
 			$instance['num_posts'] = $num_posts;
-		
-		$cache_dur = filter_var($new_instance['cache_duration'], FILTER_SANITIZE_NUMBER_INT);
-		if (empty($cache_dur) || (int)$cache_dur < 1) 
+		}
+
+		// Set a rational cache duration
+		$cache_dur = intval( $new_instance['cache_duration'] );
+		if ( $cache_dur < 1 ) {
 			$instance['cache_duration'] = 0;
-		else 
+		}
+		else {
 			$instance['cache_duration'] = $cache_dur;
+		}
 
 		return $instance;
 
 	}
- 
+
+	/*
+	 * Output the widget form in wp-admin
+	 */
 	function form($instance) {
 		
 		for ($i = 0; $i < count($this->widget_fields); $i++) :
@@ -163,7 +180,11 @@ class proper_gnews_widget extends WP_Widget {
 		endfor;
 		proper_widgets_output_fields($this->widget_fields, $instance);
 
+		echo '<p><strong>Want to display an excerpt and thumbnail? Try the ';
+		echo '<a href="http://theproperweb.com/product/google-news-wordpress/" target="_blank">';
+		echo 'Google News for WordPress plugin.</strong></p>';
+
 	}
 }
 
-add_action( 'widgets_init', create_function('', 'return register_widget("proper_gnews_widget");') );
+add_action( 'widgets_init', create_function('', 'return register_widget("ProperGnewsWidget");') );
