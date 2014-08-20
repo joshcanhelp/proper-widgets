@@ -27,6 +27,7 @@ class PhpFormBuilder {
 			'add_nonce'    => false,
 			'add_honeypot' => true,
 			'form_element' => true,
+			'add_submit'   => true
 		);
 
 		if ( $args ) {
@@ -71,6 +72,7 @@ class PhpFormBuilder {
 			case 'novalidate':
 			case 'add_honeypot':
 			case 'form_element':
+			case 'add_submit':
 				if ( ! is_bool( $val ) ) return false;
 				break;
 
@@ -318,7 +320,7 @@ class PhpFormBuilder {
 
 		endforeach;
 
-		if ( ! $this->has_submit ) $output .= '
+		if ( ! $this->has_submit && $this->form['add_submit'] ) $output .= '
 				<div class="form_field_wrap">
 					<input type="submit" value="Submit" name="submit">
 				</div>';

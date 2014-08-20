@@ -112,6 +112,7 @@ function proper_widget_output_fields( $fields, $instance ) {
 	$widget_form = new PhpFormBuilder();
 	$widget_form->set_att('add_honeypot', FALSE);
 	$widget_form->set_att('form_element', FALSE);
+	$widget_form->set_att('add_submit', FALSE);
 	$widget_form->set_att('markup', 'html');
 
 	foreach ( $fields as $field ) {
