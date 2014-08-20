@@ -112,12 +112,16 @@ class ProperWidgetSettings
 
 		// Grab legacy settings and parse
 		if ( $legacy_options = get_option( 'pwidget_settings_array' ) ) {
-			foreach ( $legacy_options as $key=> $val ) {
+			foreach ( $legacy_options as $key => $val ) {
+				if ( empty( $key ) ) {
+					continue;
+				}
 				$plugin_settings[$key] = $val == 'yes' ? 1 : 0;
 			}
 			delete_option( 'pwidget_settings_array' );
 		}
 
+		// Make sure we have good defaults for any setting not saved
 		$this->settings = wp_parse_args( $plugin_settings, $this->default_settings );
 	}
 
