@@ -1,0 +1,50 @@
+.proper-widget li {
+  clear: both;
+  margin: 0 0 0.5em;
+  zoom: 1;
+}
+.proper-widget li:before,
+.proper-widget li:after {
+  content: "";
+  display: table;
+}
+.proper-widget li:after {
+  clear: both;
+}
+.proper-widget .proper-date {
+  font-size: 0.9em;
+  font-style: italic;
+}
+.proper-authors-widget li .alignleft {
+  margin: 0 1.5em 0.2em 0;
+}
+.proper-comments-widget li {
+  margin: 0 0 2.5em;
+}
+.proper-comments-widget li img.avatar {
+  float: left;
+  margin: 0 1.5em 0.2em 0;
+}
+.proper-comments-widget li p.proper-comment-header {
+  font-size: 0.9em;
+  line-height: 1.4em;
+  margin-bottom: 1em;
+  padding: 0;
+}
+.proper-embed-widget embed,
+.proper-embed-widget iframe,
+.proper-embed-widget object,
+.proper-embed-widget video {
+  max-width: 100%;
+}
+.proper-linked-image-widget li img {
+  display: block;
+  margin: 1em auto;
+  max-width: 100%;
+  height: auto !important;
+}
+.proper-links-widget li img {
+  max-width: 100%;
+  float: left;
+  margin: 0 1.2em 0.2em 0;
+}

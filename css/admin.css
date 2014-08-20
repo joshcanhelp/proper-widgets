@@ -1,0 +1,15 @@
+.proper_widget_fields.field_type_text label,
+.proper_widget_fields.field_type_select label,
+.proper_widget_fields.field_type_select_assoc label,
+.proper_widget_fields.field_type_textarea label {
+  display: block;
+  margin: 0 0 3px;
+}
+.proper_widget_fields label {
+  font-weight: bold;
+}
+.proper_widget_fields span.description {
+  display: block;
+  padding: 0;
+  margin-top: 3px;
+}

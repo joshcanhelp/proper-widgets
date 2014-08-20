@@ -18,7 +18,10 @@ define( 'PROPER_WIDGETS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'PROPER_WIDGETS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 // Core files
-require_once( PROPER_WIDGETS_PLUGIN_DIR . 'plugin-settings.php' );
+require_once( PROPER_WIDGETS_PLUGIN_DIR . 'inc/plugin-settings.php' );
+if ( ! class_exists( 'PhpFormBuilder' ) ) {
+	require_once( PROPER_WIDGETS_PLUGIN_DIR . 'inc/PhpFormBuilder.php' );
+}
 
 
 // Require widget files if settings allow for it
@@ -37,6 +40,7 @@ if ( ProperWidgetSettings::get_setting( 'widget_linkedimg' ) ) {
 
 if ( ProperWidgetSettings::get_setting( 'widget_links' ) ) {
 	require_once( PROPER_WIDGETS_PLUGIN_DIR . 'the-widgets/proper-links-widget.php' );
+	add_filter( 'pre_option_link_manager_enabled', '__return_true' );
 }
 
 if ( ProperWidgetSettings::get_setting( 'widget_posts' ) ) {
@@ -105,105 +109,75 @@ Builds all widget admin forms
 */
 function proper_widgets_output_fields( $fields, $instance ) {
 
-	foreach ( $fields as $field ) :
+	$widget_form = new PhpFormBuilder();
+	$widget_form->set_att('add_honeypot', FALSE);
+	$widget_form->set_att('form_element', FALSE);
+	$widget_form->set_att('markup', 'html');
 
-		echo '<p class="pstart_widget_fields">';
+	foreach ( $fields as $field ) {
 
-		switch ( $field['type'] ) :
+		$input_args = array(
+			'type'       => $field['type'],
+			'name'       => $field['field_name'],
+			'class'      => array( 'widefat' ),
+			'wrap_tag'	=> '',
+			'before_html'   => '<p class="proper_widget_fields field_type_' . $field['type'] . '">',
+			'after_html' => '</p>',
+		);
+
+		if ( ! empty( $field['description'] ) ) {
+			$input_args['after_html'] = '<span class="description">' .
+				$field['description'] . '</span>' . $input_args['after_html'];
+		}
+
+		switch ( $field['type'] ) {
 
 			case 'text':
 			case 'email':
 			case 'url':
 			case 'number':
 			case 'password':
-				?>
-
-				<label for="<?php echo esc_attr( $field['field_id'] ); ?>">
-					<?php echo $field['label'] ?>
-				</label>
-				<input type="<?php echo esc_attr( $field['type'] ); ?>" id="<?php echo esc_attr( $field['field_id'] ) ?>" name="<?php echo $field['field_name'] ?>" value="<?php echo isset( $instance[$field['id']] ) ? $instance[$field['id']] : $field['default'] ?>" class="widefat">
-
-				<?php
-				break;
-
 			case 'textarea':
-				?>
-
-				<label for="<?php echo esc_attr( $field['field_id'] ) ?>" class="textarea_label"><?php echo $field['label'] ?></label>
-				<textarea id="<?php echo esc_attr( $field['field_id'] ) ?>" name="<?php echo $field['field_name'] ?>" class="widefat"><?php
-					echo isset( $instance[$field['id']] ) ? $instance[$field['id']] : $field['default']
-				?></textarea>
-
-				<?php
+				$input_args['value'] = isset( $instance[$field['id']] ) ? $instance[$field['id']] : $field['default'];
 				break;
 
 			case 'checkbox':
-				?>
-
-				<input type="checkbox" id="<?php echo esc_attr( $field['field_id'] ) ?>" name="<?php echo $field['field_name'] ?>" value="1" <?php
-				if ( !empty( $instance[$field['id']] ) ) echo 'checked';
-				?>>
-				<label for="<?php echo esc_attr( $field['field_id'] ) ?>" class="checkbox_label"><?php echo $field['label'] ?></label>
-
-				<?php
+				$input_args['value'] = 1;
+				$input_args['checked'] = ! empty( $instance[$field['id']] ) ? TRUE : FALSE;
+				$input_args['class'] = array( 'checkbox' );
 				break;
 
 			case 'select':
 			case 'select_assoc':
-				?>
-
-				<label for="<?php echo esc_attr( $field['field_id'] ) ?>" class="select_label">
-					<?php echo $field['label'] ?>
-				</label>
-				<select id="<?php echo esc_attr( $field['field_id'] ) ?>" name="<?php echo $field['field_name'] ?>" class="widefat">
-
-					<?php
-					if ( $field['options'] == 'callback' && function_exists( $field['options_callback'] ) ) :
-
-						// Use the options_callback to output options
-						// Pass in the selected value, if any
-						$field['options_callback']( ! empty( $instance[$field['id']] ) ? $instance[$field['id']] : '' );
-
-					elseif ( is_array( $field['options'] ) ) :
-						foreach ( $field['options'] as $key => $val ) :
-
-							// Adjusting for non-assoc arrays for options
-							if ( $field['type'] == 'select' ) {
-								$key = $val;
-							}
-
-							// Selecting the current set option
-							$checked = isset( $instance[$field['id']] ) && $instance[$field['id']] == $key ? ' selected' : '';
-							?>
-
-							<option value="<?php echo esc_attr( $key ); ?>"<?php echo $checked; ?>><?php echo $val; ?></option>
-
-						<?php
-						endforeach;
-						?>
-
-					<?php
-					else: ?>
-						<option value="">No valid options available</option>
-					<?php endif; ?>
-
-				</select>
-
-				<?php
+				$input_args['selected'] = isset( $instance[$field['id']] ) ? $instance[$field['id']] : FALSE;
+				$input_args['options'] = $field['options'];
+				if ( $field['type'] == 'select' ) {
+					$input_args['options'] = array();
+					foreach ( $field['options'] as $val ) {
+						$input_args['options'][$val] = $val;
+					}
+				} else {
+					$input_args['type'] = 'select';
+				}
 				break;
 
-		endswitch;
-
-		if ( ! empty( $field['description'] ) ) {
-			echo '<span class="field_description">' . $field['description'] . '</span>';
 		}
 
-		echo '</p>';
+		$widget_form->add_input( $field['label'], $input_args, esc_attr( $field['field_id'] ) );
 
-	endforeach;
+	}
+
+	$widget_form->build_form();
 
 }
 
+/**
+ * Process RSS feeds using SimplePie
+ *
+ * @param $feed_args
+ *
+ * @return array|string
+ */
 function proper_widget_fetch_rss( $feed_args ) {
 
 	$rss = fetch_feed( $feed_args['url'] );
@@ -266,40 +240,55 @@ function proper_widget_fetch_rss( $feed_args ) {
 	return $feed_content;
 }
 
-// Output an embedded player using a URL and size parameters
-function proper_widget_output_embed( $url, $w = 500, $h = 280 ) {
+/**
+ * Widget wrapper HTML
+ */
+function proper_widget_wrap_html ( $args, $location, $title = '' ) {
 
-	$output    = '';
-	$embed_url = parse_url( $url );
-	$host      = isset( $embed_url['host'] ) ? $embed_url['host'] : '';
-	$path      = isset( $embed_url['path'] ) ? str_replace( '/', '', $embed_url['path'] ) : '';
-	$query     = isset( $embed_url['query'] ) ? $embed_url['query'] : '';
+	if ( $location === 'top' ) {
 
-	switch ( $host ) :
+		$title = sanitize_text_field( $title );
+		$title = apply_filters( 'widget_title', $title );
 
-		case 'www.youtube.com':
-		case 'youtube.com':
-			$queries = explode( '&', $query );
-			foreach ( $queries as $q ) :
-				$q_parts = explode( '=', $q );
-				if ( $q_parts[0] == 'v' )
-					$output .= proper_widget_output_youtube( $q_parts[1], $w, $h );
+		echo $args['before_widget'] . '<div class="proper-widget">';
 
-			endforeach;
-			break;
+		if ( ! empty( $title ) ) {
+			echo $args['before_title'] . $title . $args['after_title'];
+		}
 
-		case 'youtu.be':
-			if ( ! empty( $path ) )
-				$output .= proper_widget_output_youtube( $path, $w, $h );
-			break;
-
-		case 'www.vimeo.com':
-		case 'vimeo.com':
-			if ( ! empty( $path ) )
-				$output .= proper_widget_output_vimeo( $path, $w, $h );
-			break;
-
-	endswitch;
-
-	return ! empty( $output ) ? $output : 'Bad URL';
+	} else if ( $location = 'bottom' ) {
+		echo '</div>' . $args['after_widget'];
+	}
 }
+
+
+
+/**
+ * Output CSS if the setting is chosen
+ */
+function proper_widgets_output_css () {
+
+	echo '<style type="text/css">';
+	include( PROPER_WIDGETS_PLUGIN_DIR . 'css/widgets.css' );
+	echo '</style>';
+
+}
+add_action( 'wp_head', 'proper_widgets_output_css' );
+
+/**
+ * CSS and JavaScript for admin pages
+ */
+function proper_admin_css_js() {
+
+	global $pagenow;
+
+	if ( $pagenow == 'widgets.php' ) {
+		wp_enqueue_style(
+			'proper-widgets-admin',
+			PROPER_WIDGETS_PLUGIN_URL . 'css/admin.css'
+		);
+	}
+
+}
+
+add_action( 'admin_enqueue_scripts', 'proper_admin_css_js' );

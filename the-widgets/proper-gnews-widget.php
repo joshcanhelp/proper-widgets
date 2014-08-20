@@ -10,7 +10,7 @@ class ProperGnewsWidget extends WP_Widget {
 	function __construct () {
 
 		$widget_ops = array( 'classname' => $this->css_class);
-		$this->WP_Widget( 'proper-gnews-widget', 'PROPER Google News Lite', $widget_ops);
+		$this->WP_Widget( $this->css_class, 'PROPER Google News Lite', $widget_ops);
 
 		// Widget options
 		$this->widget_fields = array(
@@ -58,7 +58,6 @@ class ProperGnewsWidget extends WP_Widget {
 			),
 			
 		);
-	
 	}
 
 	/*
@@ -97,23 +96,14 @@ class ProperGnewsWidget extends WP_Widget {
 			return;
 		}
 
-		// HTML output
-		echo $args['before_widget'] . '
-			<div class="proper-widget">';
-
-		$title = apply_filters( 'widget_title', $instance['title'] );
-		if ( ! empty( $title ) ) {
-			echo $args['before_title'] . $title . $args['after_title'];
-		}
-		
-		echo '
-		<ul class="proper-gnews-links proper-links-list">';
-
 		$target = ! empty( $instance['target'] ) ? ' target="_blank"' : '';
 
+		proper_widget_wrap_html( $args, 'top', $instance['title'] );
+		
+		echo '<ul class="proper-gnews-links proper-links-list">';
 		foreach ( $feed_content as $item ) {
-			echo '<li>';
-			echo '<a href="';
+			echo '<li><p>';
+			echo '<a class="proper-headline-link" href="';
 			echo esc_url( $item['link'] );
 			echo '" title="';
 			echo esc_attr( $item['title']);
@@ -122,15 +112,14 @@ class ProperGnewsWidget extends WP_Widget {
 			echo '</a>';
 
 			if ( $feed_args['get_date'] ) {
-				echo '<p>' . $item['date'] . '</p>';
+				echo '<br><span class="proper-date">' . $item['date'] . '</span>';
 			}
 
-			echo '</li>';
+			echo '</p></li>';
 		}
 
-		echo '</ul></div>
-			' . $args['after_widget'];
-			
+		echo '</ul>';
+		proper_widget_wrap_html( $args, 'bottom' );
 	}
 
 	/*
@@ -165,7 +154,6 @@ class ProperGnewsWidget extends WP_Widget {
 		}
 
 		return $instance;
-
 	}
 
 	/*
@@ -183,7 +171,6 @@ class ProperGnewsWidget extends WP_Widget {
 		echo '<p><strong>Want to display an excerpt and thumbnail? Try the ';
 		echo '<a href="http://theproperweb.com/product/google-news-wordpress/" target="_blank">';
 		echo 'Google News for WordPress plugin.</strong></p>';
-
 	}
 }
 

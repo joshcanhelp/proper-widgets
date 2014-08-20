@@ -60,25 +60,15 @@ class ProperArticleWidget extends WP_Widget {
 	 */
 	function widget( $args, $instance ) {
 
-		// Output escaping
-		$title = sanitize_text_field( $instance['title'] );
-		$title = apply_filters( 'widget_title', $title );
-
 		$subtitle = sanitize_text_field( $instance['subtitle'] );
 
 		$body = strip_tags( $instance['body'], $this->allowed_tags );
 		$body = wpautop( $body );
 
 		$link_text = sanitize_text_field( $instance['link_text'] );
-		$link = esc_url( $instance['link'] );
+		$link      = esc_url( $instance['link'] );
 
-		// HTML output
-		echo $args['before_widget'] . '
-			<div class="proper-widget">';
-
-		if ( ! empty( $title ) ) {
-			echo $args['before_title'] . $title . $args['after_title'];
-		}
+		proper_widget_wrap_html( $args, 'top', $instance['title'] );
 
 		if ( ! empty( $subtitle ) ) {
 			echo '<p class="proper-subtitle"><em>' . $subtitle . '</em></p>';
@@ -88,13 +78,12 @@ class ProperArticleWidget extends WP_Widget {
 			echo $body;
 		}
 
-		if ( !empty( $link ) ) {
+		if ( ! empty( $link ) ) {
 			$link_text = ! empty( $link_text ) ? $link_text : __( 'Read More &raquo;', 'proper-widgets' );
 			echo '<a href="' . $link . '" class="read-more">' . $link_text . '</a>';
 		}
 
-		echo '</div>
-			' . $args['after_widget'];
+		proper_widget_wrap_html( $args, 'bottom' );
 
 	}
 

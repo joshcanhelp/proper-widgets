@@ -1,16 +1,18 @@
 <?php 
 
-class proper_posts_widget extends WP_Widget {
-	
-	function proper_posts_widget() {
-		
-		/* Widget settings. */
-		$widget_ops = array( 'classname' => __FUNCTION__);
+class ProperPostsWidget extends WP_Widget {
 
-		/* Create the widget. */
+	private $css_class = 'proper-posts-widget';
+
+	/*
+	 * Constructor called on initialize
+	 */
+	function __construct() {
+		
+		$widget_ops = array( 'classname' => $this->css_class );
 		$this->WP_Widget( 'proper-posts-widget', 'PROPER Posts', $widget_ops);
 		
-		// Get link categories
+		// Get post categories
 		$categories = get_categories(array (
 			'type' => 'post',
 			'hide_empty' => 0
@@ -19,14 +21,12 @@ class proper_posts_widget extends WP_Widget {
 		$post_cats = array(
 		    'all' => '- All -'
 		);
-		foreach($categories as $category) $post_cats[$category->term_id] = $category->name;
-		
-		$defaults = array(
-			'title' => '',
-			'categories' => '',
-			'offset' => '0',
-		);
-		
+
+		foreach($categories as $category) {
+			$post_cats[$category->term_id] = $category->name;
+		}
+
+		// Widget options
 		$this->widget_fields = array(
 			array(
 				'label' => 'Title',
@@ -37,14 +37,32 @@ class proper_posts_widget extends WP_Widget {
 			),		
 			array(
 				'label' => 'Category',
-				'type' => 'select',
+				'type' => 'select_assoc',
 				'id' => 'category',
 				'options' => $post_cats,
 				'description' => 'Select the category of posts to display',
 				'default' => ''
 			),
 			array(
-				'label' => '# of items to show',
+				'label' => 'Show publish date',
+				'type' => 'checkbox',
+				'id' => 'show_date',
+				'default' => 0
+			),
+			array(
+				'label' => 'Show thumbnail',
+				'type' => 'select_assoc',
+				'id' => 'show_thumb',
+				'options' => array(
+					'' => 'No',
+					'left' => 'Yes, float left',
+					'right' => 'Yes, float right',
+					'center' => 'Yes, centered',
+				),
+				'default' => ''
+			),
+			array(
+				'label' => '# of posts to show',
 				'type' => 'number',
 				'id' => 'num_posts',
 				'description' => '',
@@ -64,89 +82,176 @@ class proper_posts_widget extends WP_Widget {
 				'description' => 'The number of posts to offset on this list',
 				'default' => 0
 			),
+			array(
+				'label'       => 'Display posts that are ...',
+				'type'        => 'select_assoc',
+				'id'          => 'orderby',
+				'description' => '',
+				'options' => array(
+					'date' => 'Most recently published',
+					'modified' => 'Most recently changed',
+					'comment_count' => 'Most commented',
+					'rand' => 'Random',
+				),
+				'default'     => 'date'
+			),
+			array(
+				'label'       => 'Order displayed posts by ...',
+				'type'        => 'select_assoc',
+				'id'          => 'orderby_final',
+				'description' => '',
+				'options' => array(
+					'date' => 'Publish date',
+					'modified' => 'Last change date',
+					'rand' => 'Random order',
+					'title' => 'Alphabetical by title',
+					'comment_count' => 'Comment count',
+				),
+				'default'     => 'date'
+			),
 			
 		);
-	
 	}
-	 
+
+	/*
+	 * Front-end widget output
+	 */
 	function widget($args, $instance) {
-		
-		// Pulling out all settings
-		extract($args); 
-		extract($instance); 
-		
-		// Output all wrappers
-		echo $before_widget . '
-		<div class="proper-widget proper-posts-widget">';
-		
-		if(isset($title) && !empty($title)) 
-			echo $before_title . $title . $after_title;
-			
-		echo '
-			<ul class="proper-posts-links proper-links-list links-category-'.$category.'">';
-			
-			// Args for posts to be displayed, set in the widget form
+
+		$orderby = sanitize_text_field( $instance['orderby'] );
+
+		// Args for posts to be displayed, set in the widget form
 		$list_args = array(
-			'posts_per_page' => $num_posts,
-			'offset' => $offset
+			'posts_per_page' => intval( $instance['num_posts'] ),
+			'offset'         => intval( $instance['offset'] ),
+			'orderby'         => $orderby
 		);
-		
+
 		// Category to display, if not all
-		if ($category != 'all') 
-			$list_args['cat'] = $category;
-	
-		$the_posts = get_posts($list_args);
+		if ( $instance['category'] != 'all' ) {
+			$list_args['cat'] = intval( $instance['category'] );
+		}
+
+		$the_posts = get_posts( $list_args );
+
+		if ( empty( $the_posts ) ) {
+			return;
+		}
+
+		// Order retrieved posts by widget option
+		if ( $orderby !== $instance['orderby_final'] ) {
+			switch ( $instance['orderby_final'] ) {
+				case 'date':
+					usort( $the_posts, function ($a, $b) {
+						return $a->post_date < $b->post_date;
+					});
+					break;
+				case 'modified':
+					usort( $the_posts, function ( $a, $b ) {
+						return $a->post_modified < $b->post_modified;
+					} );
+					break;
+				case 'rand':
+					shuffle( $the_posts );
+					break;
+				case 'title':
+					usort( $the_posts, function  ($a, $b) {
+						return strcmp( $a->post_title, $b->post_title );
+					});
+					break;
+				case 'comment_count':
+					usort( $the_posts, function ( $a, $b ) {
+						return $a->comment_count > $b->comment_count;
+					} );
+					break;
+			}
+		}
 		
-		if (!empty($the_posts)) :
+		// HTML output
+		echo $args['before_widget'] . '<div class="proper-widget">';
+
+		$title = apply_filters( 'widget_title', $instance['title'] );
+		if ( ! empty( $title ) ) {
+			echo $args['before_title'] . $title . $args['after_title'];
+		}
 			
-			foreach ($the_posts as $a_post) :
+		echo '<ul class="proper-posts-links proper-links-list links-category-'. $instance['category'].'">';
 
-                $the_excerpt = '';
-                if ($excerpt_len) {
-                    $the_excerpt = !empty($a_post->post_excerpt) ?
-                        $a_post->post_excerpt :
-                        strip_tags($a_post->post_content);
-                    $the_excerpt = substr($the_excerpt, 0, $excerpt_len) . ' ...';
-                }
-				
-				echo '
-			<li class="the-content">
-				<p><a href="' . get_permalink($a_post->ID).'" title="' . $a_post->post_title . '">' .
-				$a_post->post_title . '</a>';
+		foreach ($the_posts as $a_post) {
 
-            if ( !empty( $the_excerpt ) )
-                echo '<br>' . $the_excerpt;
+			$pid = $a_post->ID;
 
-		    echo '</p>
-		    </li>';
-				
-			endforeach;
-	
-		endif;
-		
-		echo '
-			</ul>
-		</div>
-		'. $after_widget;
-			
+			echo '<li>';
+
+			if ( $instance['show_thumb'] && has_post_thumbnail( $pid ) ) {
+				$align = 'align' . $instance['show_thumb'];
+				$thumb_size = $instance['show_thumb'] === 'center' ? 'medium' : 'thumbnail';
+				echo get_the_post_thumbnail( $pid, $thumb_size, array(
+					'class' => $align,
+					'style' => 'max-width: 100%'
+				) );
+			}
+
+			$permalink = get_permalink( $pid );
+			$title = apply_filters( 'the_title', $a_post->post_title );
+
+			echo '<p><a class="proper-headline-link" href="';
+			echo esc_url( $permalink );
+			echo '" title="';
+			echo esc_attr( $title );
+			echo '">' . $title . '</a>';
+
+			if ( $instance['show_date'] ) {
+				echo '<br><span class="proper-date">' . date_i18n(
+					get_option('date_format'),
+					strtotime( $a_post->post_date )
+				) . '</span>';
+			}
+
+
+			echo '</p>';
+
+			if ( $instance['excerpt_len'] ) {
+				$the_excerpt = $a_post->post_excerpt;
+				if ( empty( $the_excerpt ) ) {
+					$the_excerpt = strip_tags( $a_post->post_content );
+				}
+				$the_excerpt = substr( $the_excerpt, 0, $instance['excerpt_len'] );
+				$the_excerpt = apply_filters( 'the_excerpt', $the_excerpt );
+				echo $the_excerpt;
+			}
+
+			echo '</li>';
+
+		}
+
+		echo '</ul></div>' . $args['after_widget'];
 	}
- 
+
+	/*
+	 * Sanitize and validate options
+	 */
 	function update($new_instance, $old_instance) {
 		
 		$instance = $old_instance;
 
-		$instance['title'] = apply_filters('widget_title', strip_tags($new_instance['title']));
-		
-		$instance['category'] = $new_instance['category'];
-
-        $instance['excerpt_len'] = filter_var($new_instance['excerpt_len'], FILTER_SANITIZE_NUMBER_INT);
-		$instance['num_posts'] = filter_var($new_instance['num_posts'], FILTER_SANITIZE_NUMBER_INT);
-		$instance['offset'] = filter_var($new_instance['offset'], FILTER_SANITIZE_NUMBER_INT);
+		$instance['title'] = sanitize_text_field( $new_instance['title'] );
+		$instance['category'] = intval( $new_instance['category'] );
+		$instance['show_date'] = intval( $new_instance['show_date'] );
+		$instance['show_thumb'] = sanitize_text_field( $new_instance['show_thumb'] );
+        $instance['excerpt_len'] = intval( $new_instance['excerpt_len'] );
+		$instance['num_posts'] = intval( $new_instance['num_posts'] );
+		$instance['offset'] = intval( $new_instance['offset'] );
+		$instance['orderby'] = sanitize_text_field( $new_instance['orderby'] );
+		$instance['orderby_final'] = sanitize_text_field( $new_instance['orderby_final'] );
 
 		return $instance;
 
 	}
- 
+
+	/*
+	 * Output the widget form in wp-admin
+	 */
 	function form($instance) {
 		
 		for ($i = 0; $i < count($this->widget_fields); $i++) :
@@ -159,4 +264,4 @@ class proper_posts_widget extends WP_Widget {
 	}
 }
 
-add_action( 'widgets_init', create_function('', 'return register_widget("proper_posts_widget");') );
+add_action( 'widgets_init', create_function('', 'return register_widget("ProperPostsWidget");') );

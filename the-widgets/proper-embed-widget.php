@@ -1,15 +1,18 @@
 <?php 
 
-class proper_video_widget extends WP_Widget {
-	
-	function proper_video_widget() {
-		
-		/* Widget settings. */
-		$widget_ops = array( 'classname' => __FUNCTION__);
+class ProperEmbedWidget extends WP_Widget {
 
-		/* Create the widget. */
-		$this->WP_Widget( 'proper_video_widget', 'PROPER Video Widget', $widget_ops);
+	/*
+	 * Constructor called on initialize
+	 */
+	private $css_class = 'proper-embed-widget';
+	
+	function __construct() {
 		
+		$widget_ops = array( 'classname' => $this->css_class );
+		$this->WP_Widget( $this->css_class, 'PROPER Embed Widget', $widget_ops);
+
+		// Widget options
 		$this->widget_fields = array(
 			array(
 				'label' => 'Title',
@@ -19,62 +22,65 @@ class proper_video_widget extends WP_Widget {
 				'default' => ''
 			),
             array(
-                'label' => 'Video URL',
+                'label' => 'Embed URL',
                 'type' => 'url',
-                'id' => 'video_url',
-                'description' => 'Enter a valid URL to a YouTube or Vimeo video',
+                'id' => 'embed_url',
+                'description' => 'Enter a valid URL to an <a href="http://codex.wordpress.org/Embeds#Okay.2C_So_What_Sites_Can_I_Embed_From.3F" target="_blank">embeddable source</a>',
                 'default' => ''
             ),
             array(
-                'label' => 'Video width',
+                'label' => 'Width',
                 'type' => 'number',
-                'id' => 'video_w',
+                'id' => 'embed_w',
                 'description' => 'Enter a width, in pixels, for this video',
                 'default' => 300
             ),
             array(
-                'label' => 'Video height',
+                'label' => 'Height',
                 'type' => 'number',
-                'id' => 'video_h',
+                'id' => 'embed_h',
                 'description' => 'Enter a height, in pixels, for this video',
                 'default' => 200
             ),
 		);
 	
 	}
-	 
-	function widget($args, $instance) {
-		
-		// Pulling out all settings
-		extract($args); 
-		extract($instance); 
-		
-		// Output all wrappers
-		echo $before_widget . '
-		<div class="proper-widget proper-video-widget">';
-		
-		if(isset($title) && !empty($title)) 
-			echo $before_title . $title . $after_title;
 
-		echo proper_widget_output_embed($video_url, $video_w, $video_h) . '
-		</div>
-		'. $after_widget;
+	/*
+	 * Front-end widget output
+	 */
+	function widget($args, $instance) {
+
+		proper_widget_wrap_html( $args, 'top', $instance['title'] );
+
+		echo wp_oembed_get( $instance['embed_url'], array(
+			'width' => intval( $instance['embed_w'] ),
+			'height' => intval( $instance['embed_h'] )
+		) );
+
+		proper_widget_wrap_html( $args, 'bottom' );
 			
 	}
- 
+
+	/*
+	 * Sanitize and validate options
+	 */
 	function update($new_instance, $old_instance) {
 		
 		$instance = $old_instance;
 
-		$instance['title'] = apply_filters('widget_title', strip_tags($new_instance['title']));
-		$instance['video_url'] = $new_instance['video_url'];
-        $instance['video_w'] = intval($new_instance['video_w']);
-        $instance['video_h'] = intval($new_instance['video_h']);
+		$instance['title'] = sanitize_text_field( $new_instance['title'] );
+		$instance['embed_url'] = esc_url( $new_instance['embed_url'] );
+        $instance['embed_w'] = intval($new_instance['embed_w']);
+        $instance['embed_h'] = intval($new_instance['embed_h']);
 
 		return $instance;
 
 	}
- 
+
+	/*
+	 * Output the widget form in wp-admin
+	 */
 	function form($instance) {
 		
 		for ($i = 0; $i < count($this->widget_fields); $i++) :
@@ -87,4 +93,4 @@ class proper_video_widget extends WP_Widget {
 	}
 }
 
-add_action( 'widgets_init', create_function('', 'return register_widget("proper_video_widget");') );
+add_action( 'widgets_init', create_function('', 'return register_widget("ProperEmbedWidget");') );

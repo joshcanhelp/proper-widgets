@@ -97,15 +97,8 @@ class ProperAuthorsWidget extends WP_Widget {
 			return;
 		}
 
-		// HTML output
-		echo $args['before_widget'] . '
-			<div class="proper-widget">';
-
-		if ( ! empty( $title ) ) {
-			echo $args['before_title'] . $title . $args['after_title'];
-		}
-			
-		echo '<ul class="proper-author-links">';
+		proper_widget_wrap_html( $args, 'top', $instance['title'] );
+		echo '<ul>';
 
 		foreach ( $the_users as $a_user ) :
 
@@ -113,7 +106,7 @@ class ProperAuthorsWidget extends WP_Widget {
 			$url   = esc_url( $a_user->data->user_url );
 			$uid = $a_user->data->ID;
 
-			echo '<li style="clear:both">';
+			echo '<li>';
 
 			// Display avatar
 			if ( ! empty( $instance['show_img'] ) ) {
@@ -155,9 +148,8 @@ class ProperAuthorsWidget extends WP_Widget {
 
 		endforeach;
 
-		echo '</ul></div>
-			' . $args['after_widget'];
-			
+		echo '</ul>';
+		proper_widget_wrap_html( $args, 'bottom' );
 	}
 
 	/*

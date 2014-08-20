@@ -27,6 +27,7 @@ class ProperWidgetSettings
 		$this->default_settings = (array) apply_filters(
 			$this->plugin_prefix . '_setting_defaults',
 			array(
+				'output_css' => 1,
 				'widget_article' => 1,
 				'widget_authors' => 1,
 				'widget_comments' => 1,
@@ -47,6 +48,10 @@ class ProperWidgetSettings
 		$this->settings_texts = (array) apply_filters(
 			$this->plugin_prefix . '_setting_labels',
 			array(
+				'output_css' => array(
+					'label' => __( 'Use PROPER Widget CSS', $this->dashed_name ),
+					'type'  => 'yesno'
+				),
 				'widget_article' => array(
 					'label' => __( 'Show PROPER Article widget', $this->dashed_name ),
 					'type'  => 'yesno'
@@ -102,8 +107,17 @@ class ProperWidgetSettings
 			)
 		);
 
-		// Grab current settings and parse with defaults
+		// Grab current saved settings
 		$plugin_settings = get_option( $this->plugin_prefix . '_settings', array() );
+
+		// Grab legacy settings and parse
+		if ( $legacy_options = get_option( 'pwidget_settings_array' ) ) {
+			foreach ( $legacy_options as $key=> $val ) {
+				$plugin_settings[$key] = $val === 'yes' ? 1 : '';
+			}
+			delete_option( 'pwidget_settings_array' );
+		}
+
 		$this->settings = wp_parse_args( $plugin_settings, $this->default_settings );
 	}
 
