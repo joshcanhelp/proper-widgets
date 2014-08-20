@@ -88,7 +88,7 @@ class ProperEmbedWidget extends WP_Widget {
 			$this->widget_fields[$i]['field_id'] = $this->get_field_id($field_id);
 			$this->widget_fields[$i]['field_name'] = $this->get_field_name($field_id);
 		endfor;
-		proper_widgets_output_fields($this->widget_fields, $instance);
+		proper_widget_output_fields($this->widget_fields, $instance);
 
 	}
 }

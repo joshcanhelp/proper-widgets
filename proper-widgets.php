@@ -107,7 +107,7 @@ function proper_widget_truncate( $string, $limit, $break = " " ) {
 /*
 Builds all widget admin forms
 */
-function proper_widgets_output_fields( $fields, $instance ) {
+function proper_widget_output_fields( $fields, $instance ) {
 
 	$widget_form = new PhpFormBuilder();
 	$widget_form->set_att('add_honeypot', FALSE);
@@ -266,19 +266,19 @@ function proper_widget_wrap_html ( $args, $location, $title = '' ) {
 /**
  * Output CSS if the setting is chosen
  */
-function proper_widgets_output_css () {
+function proper_widget_wp_head () {
 
 	echo '<style type="text/css">';
 	include( PROPER_WIDGETS_PLUGIN_DIR . 'css/widgets.css' );
 	echo '</style>';
 
 }
-add_action( 'wp_head', 'proper_widgets_output_css' );
+add_action( 'wp_head', 'proper_widget_wp_head' );
 
 /**
  * CSS and JavaScript for admin pages
  */
-function proper_admin_css_js() {
+function proper_widget_admin_enqueue_scripts() {
 
 	global $pagenow;
 
@@ -291,4 +291,4 @@ function proper_admin_css_js() {
 
 }
 
-add_action( 'admin_enqueue_scripts', 'proper_admin_css_js' );
+add_action( 'admin_enqueue_scripts', 'proper_widget_admin_enqueue_scripts' );
