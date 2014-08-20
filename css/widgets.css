@@ -35,7 +35,7 @@
 .proper-embed-widget iframe,
 .proper-embed-widget object,
 .proper-embed-widget video {
-  max-width: 100%;
+  max-width: 100% !important;
 }
 .proper-linked-image-widget li img {
   display: block;

@@ -68,7 +68,7 @@ class ProperArticleWidget extends WP_Widget {
 		$link_text = sanitize_text_field( $instance['link_text'] );
 		$link      = esc_url( $instance['link'] );
 
-		proper_widget_wrap_html( $args, 'top', $instance['title'] );
+		proper_widget_wrap_html( $args, 'top', $instance['title'], $this->css_class );
 
 		if ( ! empty( $subtitle ) ) {
 			echo '<p class="proper-subtitle"><em>' . $subtitle . '</em></p>';

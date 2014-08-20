@@ -51,7 +51,7 @@ class ProperEmbedWidget extends WP_Widget {
 	 */
 	function widget($args, $instance) {
 
-		proper_widget_wrap_html( $args, 'top', $instance['title'] );
+		proper_widget_wrap_html( $args, 'top', $instance['title'], $this->css_class );
 
 		echo wp_oembed_get( $instance['embed_url'], array(
 			'width' => intval( $instance['embed_w'] ),

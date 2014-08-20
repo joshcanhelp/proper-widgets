@@ -98,7 +98,7 @@ class ProperGnewsWidget extends WP_Widget {
 
 		$target = ! empty( $instance['target'] ) ? ' target="_blank"' : '';
 
-		proper_widget_wrap_html( $args, 'top', $instance['title'] );
+		proper_widget_wrap_html( $args, 'top', $instance['title'], $this->css_class );
 		
 		echo '<ul class="proper-gnews-links proper-links-list">';
 		foreach ( $feed_content as $item ) {

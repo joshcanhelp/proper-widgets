@@ -166,14 +166,8 @@ class ProperPostsWidget extends WP_Widget {
 					break;
 			}
 		}
-		
-		// HTML output
-		echo $args['before_widget'] . '<div class="proper-widget">';
 
-		$title = apply_filters( 'widget_title', $instance['title'] );
-		if ( ! empty( $title ) ) {
-			echo $args['before_title'] . $title . $args['after_title'];
-		}
+		proper_widget_wrap_html( $args, 'top', $instance['title'], $this->css_class );
 			
 		echo '<ul class="proper-posts-links proper-links-list links-category-'. $instance['category'].'">';
 
@@ -225,7 +219,8 @@ class ProperPostsWidget extends WP_Widget {
 
 		}
 
-		echo '</ul></div>' . $args['after_widget'];
+		echo '</ul>';
+		proper_widget_wrap_html( $args, 'bottom' );
 	}
 
 	/*

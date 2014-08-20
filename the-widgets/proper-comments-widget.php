@@ -90,7 +90,7 @@ class ProperCommentsWidget extends WP_Widget {
 			$show_avatar = TRUE;
 		}
 
-		proper_widget_wrap_html( $args, 'top', $instance['title'] );
+		proper_widget_wrap_html( $args, 'top', $instance['title'], $this->css_class );
 
 		echo '<ul class="proper-comments">';
 		foreach ( $comments as $comment ) {

@@ -86,7 +86,7 @@ class ProperLinksWidget extends WP_Widget {
 			return;
 		}
 
-		proper_widget_wrap_html( $args, 'top', $instance['title'] );
+		proper_widget_wrap_html( $args, 'top', $instance['title'], $this->css_class );
 		echo '<ul class="proper-wp-links proper-links-list links-category-' . $category . '">';
 
 		foreach ( $links as $link ) {

@@ -244,14 +244,14 @@ function proper_widget_fetch_rss( $feed_args ) {
 /**
  * Widget wrapper HTML
  */
-function proper_widget_wrap_html ( $args, $location, $title = '' ) {
+function proper_widget_wrap_html ( $args, $location, $title = '', $class = '' ) {
 
 	if ( $location === 'top' ) {
 
 		$title = sanitize_text_field( $title );
 		$title = apply_filters( 'widget_title', $title );
 
-		echo $args['before_widget'] . '<div class="proper-widget">';
+		echo $args['before_widget'] . '<div class="proper-widget ' . $class . '">';
 
 		if ( ! empty( $title ) ) {
 			echo $args['before_title'] . $title . $args['after_title'];
