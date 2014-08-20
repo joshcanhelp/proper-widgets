@@ -113,7 +113,7 @@ class ProperWidgetSettings
 		// Grab legacy settings and parse
 		if ( $legacy_options = get_option( 'pwidget_settings_array' ) ) {
 			foreach ( $legacy_options as $key=> $val ) {
-				$plugin_settings[$key] = $val === 'yes' ? 1 : '';
+				$plugin_settings[$key] = $val == 'yes' ? 1 : 0;
 			}
 			delete_option( 'pwidget_settings_array' );
 		}
