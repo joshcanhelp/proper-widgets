@@ -52,13 +52,13 @@ class ProperCommentsWidget extends WP_Widget {
 				'type'        => 'select_assoc',
 				'id'          => 'type',
 				'description' => __( 'Select the comment type', 'proper-widgets' ),
-				'default'     => 'comment',
 				'options'     => array(
 					'comment'  => __( 'Comment', 'proper-widgets' ),
 					'pingback' => __( 'Pingback', 'proper-widgets' ),
 					'trackback' => __( 'Trackback', 'proper-widgets' ),
 					'all'     => __( 'All', 'proper-widgets' ),
-				)
+				),
+				'default' => 'comment',
 			),
 			array(
 				'label'       => __( 'Comment header', 'proper-widgets' ),

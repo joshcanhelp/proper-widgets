@@ -19,14 +19,15 @@ class ProperAuthorsWidget extends WP_Widget {
 				'type' => 'text',
 				'id' => 'title',
 				'description' => __( 'Title for this widget or leave blank for none', 'proper-widgets' ),
-				'default' => ''
+				'default' => 'Authors'
 			),		
 			array(
 				'label' => __( 'Show People', 'proper-widgets' ) ,
 				'type' => 'select',
 				'id' => 'role',
 				'options' => $this->get_roles(),
-				'description' => __( 'Select the roles of users that should be shown', 'proper-widgets' )
+				'description' => __( 'Select the roles of users that should be shown', 'proper-widgets' ),
+				'default' => 'Author'
 			),
 			array(
 				'label' => __( 'Show name', 'proper-widgets' ) ,
@@ -39,7 +40,7 @@ class ProperAuthorsWidget extends WP_Widget {
 					'website' => __( 'Yes, linked to website', 'proper-widgets' ) ,
 					'email' => __( 'Yes, linked to email', 'proper-widgets' ) ,
 				),
-				'default' => ''
+				'default' => 'author'
 			),
 			array(
 				'label' => __( 'Show avatar', 'proper-widgets' ) ,
@@ -52,13 +53,13 @@ class ProperAuthorsWidget extends WP_Widget {
 					'website' => __( 'Yes, linked to website', 'proper-widgets' ),
 					'email'   => __( 'Yes, linked to email', 'proper-widgets' ),
 				),
-				'default' => ''
+				'default' => 'author'
 			),
 			array(
 				'label' => __( 'Show Email', 'proper-widgets' ) ,
 				'type' => 'checkbox',
 				'id' => 'show_email',
-				'default' => 0
+				'default' => ''
 			),
 			array(
 				'label' => __( 'Show Website', 'proper-widgets' ) ,

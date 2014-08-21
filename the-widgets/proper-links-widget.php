@@ -33,7 +33,7 @@ class ProperLinksWidget extends WP_Widget {
 				'type'        => 'text',
 				'id'          => 'title',
 				'description' => __( 'Title for this widget or leave blank for none', 'proper-widgets' ),
-				'default'     => 'Links',
+				'default'     => '',
 			),
 			array(
 				'label'       => __( 'Link category', 'proper-widgets' ),
@@ -41,6 +41,7 @@ class ProperLinksWidget extends WP_Widget {
 				'id'          => 'category',
 				'options'     => $link_cats,
 				'description' => __( 'Select the category of links to display', 'proper-widgets' ),
+				'default' => 'all'
 			),
 			array(
 				'label'       => __( 'Order links by', 'proper-widgets' ),
@@ -51,6 +52,7 @@ class ProperLinksWidget extends WP_Widget {
 					'rating' => __( 'Rating', 'proper-widgets' ),
 					'rand'   => __( 'Random', 'proper-widgets' ),
 				),
+				'default' => 'name'
 			),
 			array(
 				'label'       => 'Image size',

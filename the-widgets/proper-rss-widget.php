@@ -19,7 +19,7 @@ class ProperRssWidget extends WP_Widget {
 				'type'        => 'text',
 				'id'          => 'title',
 				'description' => __( 'Title for this widget or leave blank for none', 'proper-widgets' ),
-				'default'     => 'RSS Feed',
+				'default'     => '',
 			),
 			array(
 				'label'       => __( 'RSS URL', 'proper-widgets' ),

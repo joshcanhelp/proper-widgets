@@ -127,13 +127,17 @@ function proper_widget_output_fields( $fields, $instance ) {
 
 			case 'checkbox':
 				$input_args['value'] = 1;
-				$input_args['checked'] = ! empty( $instance[$field['id']] ) ? TRUE : FALSE;
+				$input_args['checked'] = isset( $instance[$field['id']] ) ?
+					(bool)$instance[$field['id']] :
+					(bool)$field['default'];
 				$input_args['class'] = array( 'checkbox' );
 				break;
 
 			case 'select':
 			case 'select_assoc':
-				$input_args['selected'] = isset( $instance[$field['id']] ) ? $instance[$field['id']] : FALSE;
+				$input_args['selected'] = isset( $instance[$field['id']] ) ?
+					$instance[$field['id']] :
+					$field['default'];
 				$input_args['options'] = $field['options'];
 				if ( $field['type'] == 'select' ) {
 					$input_args['options'] = array();
