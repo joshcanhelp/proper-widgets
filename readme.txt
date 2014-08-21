@@ -27,7 +27,7 @@ PROPER Widgets are well-coded, functional widgets for any WordPress installation
 
 Use this plugin as-is on any site or just use the code contained here to add functionality to custom themes.
 
-Get the absolute latest at the [https://github.com/joshcanhelp/proper-widgets](Github repo)
+Get the absolute latest at the [Github repo](https://github.com/joshcanhelp/proper-widgets)
 
 == Installation ==
 
