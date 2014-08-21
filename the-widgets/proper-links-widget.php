@@ -10,7 +10,7 @@ class ProperLinksWidget extends WP_Widget {
 	function __construct() {
 
 		$widget_ops = array( 'classname' => $this->css_class );
-		$this->WP_Widget( $this->css_class, 'PROPER Links', $widget_ops );
+		$this->WP_Widget( $this->css_class, __( 'PROPER Links', 'proper-widgets' ), $widget_ops );
 
 		// Get link categories
 		$categories = get_categories( array(
@@ -29,38 +29,36 @@ class ProperLinksWidget extends WP_Widget {
 		// Widget options
 		$this->widget_fields = array(
 			array(
-				'label'       => 'Title',
+				'label'       => __( 'Title', 'proper-widgets' ),
 				'type'        => 'text',
 				'id'          => 'title',
-				'description' => 'Enter a title for this widget or leave blank for no title',
+				'description' => __( 'Title for this widget or leave blank for none', 'proper-widgets' ),
 				'default'     => 'Links',
 			),
 			array(
-				'label'       => 'Link category',
+				'label'       => __( 'Link category', 'proper-widgets' ),
 				'type'        => 'select_assoc',
 				'id'          => 'category',
 				'options'     => $link_cats,
-				'description' => 'Select the category of links to display',
-				'default'     => '',
+				'description' => __( 'Select the category of links to display', 'proper-widgets' ),
 			),
 			array(
-				'label'       => 'Order links by',
+				'label'       => __( 'Order links by', 'proper-widgets' ),
 				'type'        => 'select_assoc',
 				'id'          => 'orderby',
 				'options'     => array(
-					'name'   => 'Alphabetical',
-					'rating' => 'Rating',
-					'rand'   => 'Random',
+					'name'   => __( 'Alphabetical', 'proper-widgets' ),
+					'rating' => __( 'Rating', 'proper-widgets' ),
+					'rand'   => __( 'Random', 'proper-widgets' ),
 				),
-				'description' => '',
 			),
 			array(
 				'label'       => 'Image size',
 				'type'        => 'number',
 				'id'          => 'img_size',
-				'description' => 'Enter the size of the link image in pixels. <br>
-				Enter "0" to not show any images.<br>
-				Enter "-1" to keep the image\'s natural size',
+				'description' => __( 'Enter the size of the link image in pixels', 'proper-widgets' ).
+					'.<br>' . __( 'Enter "0" to not show any images', 'proper-widgets' ) .
+					'.<br>' . __( 'Enter "-1" to keep the natural size of the image', 'proper-widgets' ),
 				'default'     => 100,
 			),
 
@@ -82,11 +80,11 @@ class ProperLinksWidget extends WP_Widget {
 		$links = get_bookmarks( $link_args );
 
 		if ( empty( $links ) ) {
-			echo '<!-- PROPER Links widget found no links -->';
+			echo '<!-- ' . __( 'PROPER Links widget found no links', 'proper-widgets' ) . ' -->';
 			return;
 		}
 
-		proper_widget_wrap_html( $args, 'top', $instance['title'], $this->css_class );
+		proper_widget_wrap_top_html( $args, $instance['title'], $this->css_class );
 		echo '<ul class="proper-wp-links proper-links-list links-category-' . $category . '">';
 
 		foreach ( $links as $link ) {
@@ -119,7 +117,7 @@ class ProperLinksWidget extends WP_Widget {
 		}
 
 		echo '</ul>';
-		proper_widget_wrap_html( $args, 'bottom' );
+		proper_widget_wrap_bottom_html( $args );
 
 	}
 

@@ -10,7 +10,6 @@ class ProperWidgetSettings
 	private $settings_texts = array();
 
 	private $plugin_prefix = 'proper_widgets';
-	private $plugin_name = 'PROPER Widgets';
 	private $settings_page_name = null;
 	private $dashed_name = 'proper-widgets';
 
@@ -22,6 +21,9 @@ class ProperWidgetSettings
 		// Hooks to activate the settings and settings page
 		add_action( 'admin_init', array( &$this, 'register_setting' ) );
 		add_action( 'admin_menu', array( &$this, 'register_settings_page' ) );
+
+		// Plugin name
+		$this->plugin_name = __( 'PROPER Widgets', 'proper-widgets' );
 
 		// Default settings
 		$this->default_settings = (array) apply_filters(
@@ -49,59 +51,59 @@ class ProperWidgetSettings
 			$this->plugin_prefix . '_setting_labels',
 			array(
 				'output_css' => array(
-					'label' => __( 'Use PROPER Widget CSS', $this->dashed_name ),
+					'label' => __( 'Use PROPER Widget CSS', 'proper-widgets' ),
 					'type'  => 'yesno'
 				),
 				'widget_article' => array(
-					'label' => __( 'Show PROPER Article widget', $this->dashed_name ),
+					'label' => __( 'Show PROPER Article widget', 'proper-widgets' ),
 					'type'  => 'yesno'
 				),
 				'widget_gnews' => array(
-					'label' => __( 'Show PROPER Google News widget', $this->dashed_name ),
+					'label' => __( 'Show PROPER Google News widget', 'proper-widgets' ),
 					'type'  => 'yesno'
 				),
 				'widget_linkedimg' => array(
-					'label' => __( 'Show PROPER Linked Image widget', $this->dashed_name ),
+					'label' => __( 'Show PROPER Linked Image widget', 'proper-widgets' ),
 					'type'  => 'yesno'
 				),
 				'widget_links' => array(
-					'label' => __( 'Show PROPER Links widget', $this->dashed_name ),
+					'label' => __( 'Show PROPER Links widget', 'proper-widgets' ),
 					'type'  => 'yesno'
 				),
 				'widget_posts' => array(
-					'label' => __( 'Show PROPER Posts widget', $this->dashed_name ),
+					'label' => __( 'Show PROPER Posts widget', 'proper-widgets' ),
 					'type'  => 'yesno'
 				),
 				'widget_rss' => array(
-					'label' => __( 'Show PROPER RSS widget', $this->dashed_name ),
+					'label' => __( 'Show PROPER RSS widget', 'proper-widgets' ),
 					'type'  => 'yesno'
 				),
 				'widget_embed' => array(
-					'label' => __( 'Show PROPER Embed widget', $this->dashed_name ),
+					'label' => __( 'Show PROPER Embed widget', 'proper-widgets' ),
 					'type'  => 'yesno'
 				),
 				'widget_comments' => array(
-					'label' => __( 'Show PROPER Comments widget', $this->dashed_name ),
+					'label' => __( 'Show PROPER Comments widget', 'proper-widgets' ),
 					'type'  => 'yesno'
 				),
 				'widget_authors' => array(
-					'label' => __( 'Show PROPER Authors widget', $this->dashed_name ),
+					'label' => __( 'Show PROPER Authors widget', 'proper-widgets' ),
 					'type'  => 'yesno'
 				),
 				'widget_core_rss' => array(
-					'label' => __( 'Show core RSS widget', $this->dashed_name ),
+					'label' => __( 'Show core RSS widget', 'proper-widgets' ),
 					'type'  => 'yesno'
 				),
 				'widget_core_posts' => array(
-					'label' => __( 'Show core Posts widget', $this->dashed_name ),
+					'label' => __( 'Show core Posts widget', 'proper-widgets' ),
 					'type'  => 'yesno'
 				),
 				'widget_core_links' => array(
-					'label' => __( 'Show core Links widget', $this->dashed_name ),
+					'label' => __( 'Show core Links widget', 'proper-widgets' ),
 					'type'  => 'yesno'
 				),
 				'widget_core_comments' => array(
-					'label' => __( 'Show core Recent Comments widget', $this->dashed_name ),
+					'label' => __( 'Show core Recent Comments widget', 'proper-widgets' ),
 					'type'  => 'yesno'
 				),
 			)
@@ -155,7 +157,7 @@ class ProperWidgetSettings
 	public function register_settings_page() {
 		add_submenu_page(
 			'options-general.php',
-			'PROPER Widgets Settings',
+			__( 'PROPER Widgets settings', 'proper-widgets' ),
 			$this->plugin_name,
 			'manage_options',
 			'pwidget-admin',
@@ -197,7 +199,7 @@ class ProperWidgetSettings
 	public function settings_page() {
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( 'You do not have permission to access this page.', $this->dashed_name ) );
+			wp_die( __( 'You do not have permission to access this page.', 'proper-widgets' ) );
 		}
 
 		?>
@@ -238,8 +240,8 @@ class ProperWidgetSettings
 										echo $this->dashed_name . '-' . $setting; ?>" class="postform">
 											<?php
 											$yesno = array(
-												0 => __( 'No', $this->dashed_name ),
-												1 => __( 'Yes', $this->dashed_name )
+												0 => __( 'No', 'proper-widgets' ),
+												1 => __( 'Yes', 'proper-widgets' )
 											);
 											foreach ( $yesno as $val => $txt ) {
 												echo '<option value="' . esc_attr( $val ) . '"' . selected( $value, $val, false ) . '>' . esc_html( $txt ) . "&nbsp;</option>\n";
@@ -265,12 +267,6 @@ class ProperWidgetSettings
 										<?php
 										break;
 
-									default:
-										echo '<div>';
-										echo '<p>No output available for type ' . $this->settings_texts[$setting]['type'];
-										echo '</div>';
-										break;
-
 								endswitch;
 								?>
 								<?php
@@ -288,7 +284,7 @@ class ProperWidgetSettings
 					if ( function_exists( 'submit_button' ) ) {
 						submit_button( null, 'primary', $this->dashed_name . '-submit', false );
 						echo ' ';
-						submit_button( __( 'Reset to Defaults', $this->plugin_prefix ), '', $this->dashed_name . '-defaults', false );
+						submit_button( __( 'Reset to Defaults', $this->plugin_prefix ), '', 'proper-widgets' . '-defaults', false );
 					}
 					else {
 						echo '<input type="submit" name="' . $this->dashed_name . '-submit" class="button-primary" value="' . __( 'Save Changes', $this->plugin_prefix ) . '" />' . "\n";

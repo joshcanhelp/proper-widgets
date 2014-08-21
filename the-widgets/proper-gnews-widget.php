@@ -10,50 +10,46 @@ class ProperGnewsWidget extends WP_Widget {
 	function __construct () {
 
 		$widget_ops = array( 'classname' => $this->css_class);
-		$this->WP_Widget( $this->css_class, 'PROPER Google News Lite', $widget_ops);
+		$this->WP_Widget( $this->css_class, __( 'PROPER Google News Lite', 'proper-widgets' ), $widget_ops);
 
 		// Widget options
 		$this->widget_fields = array(
 			array(
-				'label' => 'Title',
+				'label' => __( 'Title', 'proper-widgets' ),
 				'type' => 'text',
 				'id' => 'title',
-				'description' => 'Enter a title for this widget or leave blank for no title',
+				'description' => __( 'Title for this widget or leave blank for none', 'proper-widgets' ),
 				'default' => 'Google News',
 			),		
 			array(
-				'label' => 'Keyword or phrase',
+				'label' => __( 'Keyword or phrase', 'proper-widgets' ),
 				'type' => 'text',
 				'id' => 'keyword',
-				'description' => '',
 				'default' => ''
 			),
 			array(
-				'label' => '# of items to show',
+				'label' => __( '# of items to show', 'proper-widgets' ),
 				'type' => 'number',
 				'id' => 'num_posts',
-				'description' => '',
 				'default' => get_option('posts_per_page'),
 			),
 			array(
-				'label' => 'Show date (if available)',
+				'label' => __( 'Show date (if available)', 'proper-widgets' ),
 				'type' => 'checkbox',
 				'id' => 'show_date',
-				'description' => '',
 				'default' => '',
 			),
 			array(
-				'label' => 'Open links in a new tab?',
+				'label' => __( 'Open links in a new tab?', 'proper-widgets' ),
 				'type' => 'checkbox',
 				'id' => 'target',
-				'description' => '',
 				'default' => 'yes',
 			),
 			array(
-				'label' => 'Cache duration (minutes)',
+				'label' => __( 'Cache duration (minutes)', 'proper-widgets' ),
 				'type' => 'number',
 				'id' => 'cache_duration',
-				'description' => 'How long should this feed be cached? A longer cache will lead to a faster page load',
+				'description' => __( 'How long should this feed be cached? A longer cache will lead to a faster page load', 'proper-widgets' ),
 				'default' => 30,
 			),
 			
@@ -92,13 +88,14 @@ class ProperGnewsWidget extends WP_Widget {
 		// Get the feed and check for content
 		$feed_content = proper_widget_fetch_rss( $feed_args );
 		if ( !is_array( $feed_content ) || ! count( $feed_content ) > 0 ) {
-			echo '<!-- PROPER Google News widget found no content at URL ' . $feed_args['url'] . '-->';
+			echo '<!-- ' . __( 'PROPER Google News widget found no content at URL', 'proper-widgets' ) .
+				': ' .$feed_args['url'] . '-->';
 			return;
 		}
 
 		$target = ! empty( $instance['target'] ) ? ' target="_blank"' : '';
 
-		proper_widget_wrap_html( $args, 'top', $instance['title'], $this->css_class );
+		proper_widget_wrap_top_html( $args, $instance['title'], $this->css_class );
 		
 		echo '<ul class="proper-gnews-links proper-links-list">';
 		foreach ( $feed_content as $item ) {
@@ -119,7 +116,7 @@ class ProperGnewsWidget extends WP_Widget {
 		}
 
 		echo '</ul>';
-		proper_widget_wrap_html( $args, 'bottom' );
+		proper_widget_wrap_bottom_html( $args );
 	}
 
 	/*
@@ -168,9 +165,9 @@ class ProperGnewsWidget extends WP_Widget {
 		endfor;
 		proper_widget_output_fields($this->widget_fields, $instance);
 
-		echo '<p><strong>Want to display an excerpt and thumbnail? Try the ';
-		echo '<a href="http://theproperweb.com/product/google-news-wordpress/" target="_blank">';
-		echo 'Google News for WordPress plugin.</strong></p>';
+		echo '<p><strong>' . __( 'Want to display an excerpt and thumbnail? Try the', 'proper-widgets' );
+		echo ' <a href="http://theproperweb.com/product/google-news-wordpress/" target="_blank">';
+		echo __( 'Google News for WordPress plugin', 'proper-widgets' ) . '.</strong></p>';
 	}
 }
 

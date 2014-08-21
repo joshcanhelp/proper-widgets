@@ -10,64 +10,64 @@ class ProperAuthorsWidget extends WP_Widget {
 	function __construct() {
 
 		$widget_ops = array( 'classname' => $this->css_class );
-		$this->WP_Widget( $this->css_class, 'PROPER Authors', $widget_ops);
+		$this->WP_Widget( $this->css_class, __( 'PROPER Authors', 'proper-widgets' ) , $widget_ops);
 
 		// Widget options
 		$this->widget_fields = array(
 			array(
-				'label' => 'Title',
+				'label' => __( 'Title', 'proper-widgets' ),
 				'type' => 'text',
 				'id' => 'title',
-				'description' => 'Enter a title for this widget or leave blank for no title',
+				'description' => __( 'Title for this widget or leave blank for none', 'proper-widgets' ),
 				'default' => ''
 			),		
 			array(
-				'label' => 'Show People',
+				'label' => __( 'Show People', 'proper-widgets' ) ,
 				'type' => 'select',
 				'id' => 'role',
 				'options' => $this->get_roles(),
-				'description' => 'Select the roles of users that should be shown'
+				'description' => __( 'Select the roles of users that should be shown', 'proper-widgets' )
 			),
 			array(
-				'label' => 'Show name',
+				'label' => __( 'Show name', 'proper-widgets' ) ,
 				'type' => 'select_assoc',
 				'id' => 'show_name',
 				'options' => array(
-					'' => 'No',
-					'plain' => 'Yes, plain text',
-					'author' => 'Yes, linked to author page',
-					'website' => 'Yes, linked to website',
-					'email' => 'Yes, linked to email',
+					'' => __( 'No', 'proper-widgets' ) ,
+					'plain' => __( 'Yes, plain text', 'proper-widgets' ) ,
+					'author' => __( 'Yes, linked to author page', 'proper-widgets' ) ,
+					'website' => __( 'Yes, linked to website', 'proper-widgets' ) ,
+					'email' => __( 'Yes, linked to email', 'proper-widgets' ) ,
 				),
 				'default' => ''
 			),
 			array(
-				'label' => 'Show avatar',
+				'label' => __( 'Show avatar', 'proper-widgets' ) ,
 				'type' => 'select_assoc',
 				'id' => 'show_img',
 				'options' => array(
-					''       => 'No',
-					'plain'   => 'Yes, not linked',
-					'author'  => 'Yes, linked to author page',
-					'website' => 'Yes, linked to website',
-					'email'   => 'Yes, linked to email',
+					''        => __( 'No', 'proper-widgets' ),
+					'plain'   => __( 'Yes, not linked', 'proper-widgets' ),
+					'author'  => __( 'Yes, linked to author page', 'proper-widgets' ),
+					'website' => __( 'Yes, linked to website', 'proper-widgets' ),
+					'email'   => __( 'Yes, linked to email', 'proper-widgets' ),
 				),
 				'default' => ''
 			),
 			array(
-				'label' => 'Show Email',
+				'label' => __( 'Show Email', 'proper-widgets' ) ,
 				'type' => 'checkbox',
 				'id' => 'show_email',
 				'default' => 0
 			),
 			array(
-				'label' => 'Show Website',
+				'label' => __( 'Show Website', 'proper-widgets' ) ,
 				'type' => 'checkbox',
 				'id' => 'show_url',
 				'default' => 1
 			),
 			array(
-				'label' => 'Show Bio',
+				'label' => __( 'Show Bio', 'proper-widgets' ) ,
 				'type' => 'checkbox',
 				'id' => 'show_bio',
 				'default' => 1
@@ -97,7 +97,7 @@ class ProperAuthorsWidget extends WP_Widget {
 			return;
 		}
 
-		proper_widget_wrap_html( $args, 'top', $instance['title'], $this->css_class );
+		proper_widget_wrap_top_html( $args, $instance['title'], $this->css_class );
 		echo '<ul>';
 
 		foreach ( $the_users as $a_user ) :
@@ -110,10 +110,10 @@ class ProperAuthorsWidget extends WP_Widget {
 
 			// Display avatar
 			if ( ! empty( $instance['show_img'] ) ) {
-				$avatar = $this->get_avatar_url( get_avatar( $email, 60 ) );
+				$avatar_url = proper_widget_get_avatar_url( get_avatar( $email, 60 ) );
 
-				if ( ! empty( $avatar ) ) {
-					$avatar = '<img src="' . $avatar . '" width="60" class="alignleft">';
+				if ( ! empty( $avatar_url ) ) {
+					$avatar = '<img src="' . $avatar_url . '" width="60" class="alignleft">';
 					echo $this->link_wrap( $avatar, $instance['show_img'], $uid, $url, $email );
 				}
 			}
@@ -125,23 +125,33 @@ class ProperAuthorsWidget extends WP_Widget {
 				echo '<p><strong>' . $name . '</strong></p>';
 			}
 
-			// Display bio
-			if ( ! empty( $instance['show_bio'] ) ) {
-				$bio = get_the_author_meta( 'description', $uid );
-				echo wpautop( $bio );
-			}
+			if (
+				! empty( $instance['show_bio'] ) ||
+				! empty( $instance['show_url'] ) ||
+				! empty( $instance['show_email'] )
+			) {
+				echo '<p>';
 
-			// Display url
-			if ( ! empty( $instance['show_url'] ) ) {
-				$url = $this->link_wrap( $url, 'website', 0, $url, '' );
-				echo $url . '<br>';
-			}
+				// Display bio
+				if ( ! empty( $instance['show_bio'] ) ) {
+					$bio = get_the_author_meta( 'description', $uid );
+					echo $bio . '<br>';
+				}
+
+				// Display url
+				if ( ! empty( $instance['show_url'] ) && !empty( $url ) ) {
+					$url = $this->link_wrap( $url, 'website', 0, $url, '' );
+					echo $url . '<br>';
+				}
 
 
-			// Display email
-			if ( ! empty( $instance['show_email'] ) ) {
-				$email = $this->link_wrap( $email, 'email', 0, '', $email );
-				echo $email . '<br>';
+				// Display email
+				if ( ! empty( $instance['show_email'] ) ) {
+					$email = $this->link_wrap( $email, 'email', 0, '', $email );
+					echo $email . '<br>';
+				}
+
+				echo '</p>';
 			}
 
 			echo '</li>';
@@ -149,7 +159,7 @@ class ProperAuthorsWidget extends WP_Widget {
 		endforeach;
 
 		echo '</ul>';
-		proper_widget_wrap_html( $args, 'bottom' );
+		proper_widget_wrap_bottom_html( $args );
 	}
 
 	/*
@@ -198,7 +208,7 @@ class ProperAuthorsWidget extends WP_Widget {
 			$roles[$id] = $data['name'];
 		}
 
-		$roles['all'] = 'All';
+		$roles['all'] = __( 'All', 'proper-widgets' ) ;
 
 		return $roles;
 
@@ -227,14 +237,6 @@ class ProperAuthorsWidget extends WP_Widget {
 		}
 
 		return $inner;
-	}
-
-	/*
-	 * Get just the avatar's URL
-	 */
-	function get_avatar_url( $get_avatar ) {
-		preg_match( "/src='(.*?)'/i", $get_avatar, $matches );
-		return $matches[1];
 	}
 
 

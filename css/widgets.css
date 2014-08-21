@@ -48,3 +48,13 @@
   float: left;
   margin: 0 1.2em 0.2em 0;
 }
+.proper-posts-widget a.proper-headline-link {
+  font-weight: bold;
+}
+.proper-posts-widget img.alignleft,
+.proper-posts-widget img.alignright {
+  max-width: 50%;
+}
+.proper-posts-widget img.aligncenter {
+  max-width: 100%;
+}

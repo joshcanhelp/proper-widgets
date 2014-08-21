@@ -10,54 +10,62 @@ class ProperCommentsWidget extends WP_Widget {
 	function __construct() {
 
 		$widget_ops = array( 'classname' => $this->css_class );
-		$this->WP_Widget( $this->css_class, 'PROPER Comments', $widget_ops );
+		$this->WP_Widget( $this->css_class, __( 'PROPER Comments', 'proper-widgets' ), $widget_ops );
 
 		// Widget options
 		$this->widget_fields = array(
 			array(
-				'label'       => 'Title',
+				'label'       => __( 'Title', 'proper-widgets' ),
 				'type'        => 'text',
 				'id'          => 'title',
-				'description' => 'Enter a title for this widget or leave blank for no title',
+				'description' => __( 'Title for this widget or leave blank for none', 'proper-widgets' ),
 				'default'     => ''
 			),
 			array(
-				'label'   => '# of comments to show',
+				'label'   => __( '# of comments to show', 'proper-widgets' ) ,
 				'type'    => 'number',
 				'id'      => 'number',
 				'default' => 5
 			),
 			array(
-				'label'       => 'Offset',
+				'label'   => __( 'Comment character length', 'proper-widgets' ) ,
+				'type'    => 'number',
+				'id'      => 'content_length',
+				'description' => __( 'Length of the comment body', 'proper-widgets' ),
+				'default' => 100
+			),
+			array(
+				'label'       => __( 'Offset', 'proper-widgets' ) ,
 				'type'        => 'number',
 				'id'          => 'offset',
-				'description' => 'Enter the number of comments to skip',
+				'description' => __( 'Enter the number of comments to skip', 'proper-widgets' ) ,
 				'default'     => 0
 			),
 			array(
-				'label'       => 'Show commenter Gravatar',
+				'label'       => __( 'Show commenter Gravatar', 'proper-widgets' ),
 				'type'        => 'checkbox',
 				'id'          => 'show_avatar',
 				'default'     => ''
 			),
 			array(
-				'label'       => 'Comment type',
+				'label'       => __( 'Comment type', 'proper-widgets' ),
 				'type'        => 'select_assoc',
 				'id'          => 'type',
-				'description' => 'Select the comment type',
+				'description' => __( 'Select the comment type', 'proper-widgets' ),
 				'default'     => 'comment',
 				'options'     => array(
-					'comment'  => 'Comment',
-					'pingback' => 'Pingback',
-					'trackback' => 'Trackback',
-					'all'     => 'All',
+					'comment'  => __( 'Comment', 'proper-widgets' ),
+					'pingback' => __( 'Pingback', 'proper-widgets' ),
+					'trackback' => __( 'Trackback', 'proper-widgets' ),
+					'all'     => __( 'All', 'proper-widgets' ),
 				)
 			),
 			array(
-				'label'       => 'Comment header',
+				'label'       => __( 'Comment header', 'proper-widgets' ),
 				'type'        => 'textarea',
 				'id'          => 'header',
-				'description' => 'Build the comment header using the following tags: [date], [date_time], [time_ago] [post_name], [post_name_link], [name], [name_link]',
+				'description' => __( 'Build the comment header using the following tags: ', 'proper-widgets' ) .
+					'[date], [date_time], [time_ago] [post_name], [post_name_link], [name], [name_link]',
 				'default'     => 'Posted by [name_link] [date_time] on "[post_name_link]"',
 			),
 		);
@@ -90,10 +98,14 @@ class ProperCommentsWidget extends WP_Widget {
 			$show_avatar = TRUE;
 		}
 
-		proper_widget_wrap_html( $args, 'top', $instance['title'], $this->css_class );
+		$body_add = '';
+
+		proper_widget_wrap_top_html( $args, $instance['title'], $this->css_class );
 
 		echo '<ul class="proper-comments">';
 		foreach ( $comments as $comment ) {
+
+			$comment_link = '<a href="' . get_comment_link( $comment->comment_ID ) . '">#</a>';
 
 			// Format comment header
 			if ( ! empty( $instance['header'] ) ) {
@@ -149,25 +161,41 @@ class ProperCommentsWidget extends WP_Widget {
 				}
 
 				$header = str_replace( '[name_link]', $name_link, $header );
+				$header = $comment_link . ' ' . $header;
 
+			}
+			else {
+				$body_add = $comment_link;
 			}
 
 			echo '<li>';
 
 			if ( $show_avatar ) {
-				echo get_avatar( $comment->comment_author_email, 30 );
+				$avatar_url = proper_widget_get_avatar_url( get_avatar( $comment->comment_author_email, 30 ) );
+
+				if ( ! empty( $avatar_url ) ) {
+					echo sprintf(
+						'<img src="%s" width="%d" class="alignleft">',
+						esc_url( $avatar_url ),
+						30
+					);
+				}
 			}
 
 			if ( ! empty( $header ) ) {
 				echo '<p class="proper-comment-header">' . $header . '</p>';
 			}
 
-			echo apply_filters( 'comment_text', $comment->comment_content );
+			if ( ! empty( $instance['content_length'] ) ) {
+				$body = proper_widget_truncate( $comment->comment_content, $instance['content_length'] );
+				echo apply_filters( 'comment_text', $body . ' ' . $body_add );
+			}
+
 			echo '</li>';
 		}
 
 		echo '</ul>';
-		proper_widget_wrap_html( $args, 'bottom' );
+		proper_widget_wrap_bottom_html( $args );
 	}
 
 	/*
@@ -180,6 +208,7 @@ class ProperCommentsWidget extends WP_Widget {
 		$instance['title']  = sanitize_text_field( $new_instance['title'] );
 		$instance['number'] = intval( $new_instance['number'] );
 		$instance['offset'] = intval( $new_instance['offset'] );
+		$instance['content_length'] = intval( $new_instance['content_length'] );
 		$instance['show_avatar'] = intval( $new_instance['show_avatar'] );
 		$instance['type']   = sanitize_text_field( $new_instance['type'] );
 		$instance['header']   = sanitize_text_field( $new_instance['header'] );

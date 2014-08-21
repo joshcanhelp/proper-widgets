@@ -2,7 +2,7 @@
 
 /*
 Plugin Name: PROPER Widgets
-Plugin URI: http://theproperweb.com/code/wp/proper-widgets
+Plugin URI: http://theproperweb.com/product/proper-widgets/
 Description: More widgets than you can shake a stick at.
 Version: 1.0.0
 Author: PROPER Web Development
@@ -86,23 +86,6 @@ function proper_widget_unregister_widgets() {
 
 add_action( 'widgets_init', 'proper_widget_unregister_widgets', 1 );
 
-/*
- * Helper functions
- */
-
-function proper_widget_truncate( $string, $limit, $break = " " ) {
-
-	if ( strlen( $string ) >= $limit ) {
-
-		$string = substr( $string, 0, $limit );
-
-		while ( $string[strlen( $string ) - 1] != $break && ! empty( $string ) ) {
-			$string = substr( $string, 0, strlen( $string ) - 1 );
-		}
-	}
-
-	return $string;
-}
 
 /*
 Builds all widget admin forms
@@ -171,6 +154,37 @@ function proper_widget_output_fields( $fields, $instance ) {
 	$widget_form->build_form();
 
 }
+
+/**
+ * Output CSS if the setting is chosen
+ */
+function proper_widget_wp_head() {
+
+	echo '<style type="text/css">';
+	include( PROPER_WIDGETS_PLUGIN_DIR . 'css/widgets.css' );
+	echo '</style>';
+
+}
+
+add_action( 'wp_head', 'proper_widget_wp_head' );
+
+/**
+ * CSS and JavaScript for admin pages
+ */
+function proper_widget_admin_enqueue_scripts() {
+
+	global $pagenow;
+
+	if ( $pagenow == 'widgets.php' ) {
+		wp_enqueue_style(
+			'proper-widgets-admin',
+			PROPER_WIDGETS_PLUGIN_URL . 'css/admin.css'
+		);
+	}
+
+}
+
+add_action( 'admin_enqueue_scripts', 'proper_widget_admin_enqueue_scripts' );
 
 /**
  * Process RSS feeds using SimplePie
@@ -242,54 +256,68 @@ function proper_widget_fetch_rss( $feed_args ) {
 }
 
 /**
- * Widget wrapper HTML
+ * Widget wrapper HTML for beginning of the widget
+ *
+ * @param        $args
+ * @param string $title
+ * @param string $class
  */
-function proper_widget_wrap_html ( $args, $location, $title = '', $class = '' ) {
+function proper_widget_wrap_top_html ( $args, $title = '', $class = '' ) {
 
-	if ( $location === 'top' ) {
+	$title = sanitize_text_field( $title );
+	$title = apply_filters( 'widget_title', $title );
 
-		$title = sanitize_text_field( $title );
-		$title = apply_filters( 'widget_title', $title );
+	echo $args['before_widget'] . '<div class="proper-widget ' . $class . '">';
 
-		echo $args['before_widget'] . '<div class="proper-widget ' . $class . '">';
+	if ( ! empty( $title ) ) {
+		echo $args['before_title'] . $title . $args['after_title'];
+	}
 
-		if ( ! empty( $title ) ) {
-			echo $args['before_title'] . $title . $args['after_title'];
+}
+
+/**
+ * Widget wrapper HTML for end of the widget
+ *
+ * @param        $args
+ */
+function proper_widget_wrap_bottom_html ( $args ) {
+
+	echo '</div>' . $args['after_widget'];
+}
+
+/**
+ * Get just the avatar's URL from get_avatar output
+ *
+ * @param string $get_avatar get_avatar output
+ *
+ * @return string
+ */
+function proper_widget_get_avatar_url( $get_avatar ) {
+	preg_match( "/src='(.*?)'/i", $get_avatar, $matches );
+	return $matches[1];
+}
+
+/**
+ * Truncate a string
+ *
+ * @param        $string
+ * @param        $limit
+ * @param string $break
+ *
+ * @return string
+ */
+function proper_widget_truncate( $string, $limit, $break = " " ) {
+
+	if ( strlen( $string ) >= $limit ) {
+
+		$string = substr( $string, 0, $limit );
+
+		while ( $string[strlen( $string ) - 1] != $break && ! empty( $string ) ) {
+			$string = substr( $string, 0, strlen( $string ) - 1 );
 		}
 
-	} else if ( $location = 'bottom' ) {
-		echo '</div>' . $args['after_widget'];
-	}
-}
-
-
-
-/**
- * Output CSS if the setting is chosen
- */
-function proper_widget_wp_head () {
-
-	echo '<style type="text/css">';
-	include( PROPER_WIDGETS_PLUGIN_DIR . 'css/widgets.css' );
-	echo '</style>';
-
-}
-add_action( 'wp_head', 'proper_widget_wp_head' );
-
-/**
- * CSS and JavaScript for admin pages
- */
-function proper_widget_admin_enqueue_scripts() {
-
-	global $pagenow;
-
-	if ( $pagenow == 'widgets.php' ) {
-		wp_enqueue_style(
-			'proper-widgets-admin',
-			PROPER_WIDGETS_PLUGIN_URL . 'css/admin.css'
-		);
+		return $string . ' ...';
 	}
 
+	return $string;
 }
-
-add_action( 'admin_enqueue_scripts', 'proper_widget_admin_enqueue_scripts' );

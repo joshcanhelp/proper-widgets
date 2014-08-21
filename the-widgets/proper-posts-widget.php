@@ -10,7 +10,7 @@ class ProperPostsWidget extends WP_Widget {
 	function __construct() {
 		
 		$widget_ops = array( 'classname' => $this->css_class );
-		$this->WP_Widget( 'proper-posts-widget', 'PROPER Posts', $widget_ops);
+		$this->WP_Widget( 'proper-posts-widget', __( 'PROPER Posts', 'proper-widgets' ), $widget_ops);
 		
 		// Get post categories
 		$categories = get_categories(array (
@@ -29,83 +29,83 @@ class ProperPostsWidget extends WP_Widget {
 		// Widget options
 		$this->widget_fields = array(
 			array(
-				'label' => 'Title',
+				'label' => __( 'Title', 'proper-widgets' ),
 				'type' => 'text',
 				'id' => 'title',
-				'description' => 'Enter a title for this widget or leave blank for no title',
+				'description' => __( 'Title for this widget or leave blank for none', 'proper-widgets' ),
 				'default' => 'Posts'
 			),		
 			array(
-				'label' => 'Category',
+				'label' => __( 'Category', 'proper-widgets' ),
 				'type' => 'select_assoc',
 				'id' => 'category',
 				'options' => $post_cats,
-				'description' => 'Select the category of posts to display',
+				'description' => __( 'Select the category of posts to display', 'proper-widgets' ),
 				'default' => ''
 			),
 			array(
-				'label' => 'Show publish date',
+				'label' => __( 'Show publish date', 'proper-widgets' ),
 				'type' => 'checkbox',
 				'id' => 'show_date',
 				'default' => 0
 			),
 			array(
-				'label' => 'Show thumbnail',
+				'label' => __( 'Show thumbnail', 'proper-widgets' ),
 				'type' => 'select_assoc',
 				'id' => 'show_thumb',
 				'options' => array(
 					'' => 'No',
-					'left' => 'Yes, float left',
-					'right' => 'Yes, float right',
-					'center' => 'Yes, centered',
+					'left' => __( 'Yes, float left', 'proper-widgets' ),
+					'right' => __( 'Yes, float right', 'proper-widgets' ),
+					'center' => __( 'Yes, centered', 'proper-widgets' ),
 				),
 				'default' => ''
 			),
 			array(
-				'label' => '# of posts to show',
+				'label' => __( '# of posts to show', 'proper-widgets' ),
 				'type' => 'number',
 				'id' => 'num_posts',
 				'description' => '',
 				'default' => get_option('posts_per_page')
 			),
             array(
-                'label' => 'Excerpt length',
+                'label' => __( 'Excerpt length', 'proper-widgets' ),
                 'type' => 'number',
                 'id' => 'excerpt_len',
-                'description' => 'Length of the excerpt to show. Leave this as 0 to not display an excerpt.',
+                'description' => __( 'Length of the excerpt to show. Leave this as 0 to not display an excerpt.', 'proper-widgets' ),
                 'default' => 0
             ),
 			array(
-				'label' => 'Offset',
+				'label' => __( 'Offset', 'proper-widgets' ),
 				'type' => 'number',
 				'id' => 'offset',
-				'description' => 'The number of posts to offset on this list',
+				'description' => __( 'The number of posts to offset on this list', 'proper-widgets' ),
 				'default' => 0
 			),
 			array(
-				'label'       => 'Display posts that are ...',
+				'label'       => __( 'Display posts that are', 'proper-widgets' ) . ' ...',
 				'type'        => 'select_assoc',
 				'id'          => 'orderby',
 				'description' => '',
 				'options' => array(
-					'date' => 'Most recently published',
-					'modified' => 'Most recently changed',
-					'comment_count' => 'Most commented',
-					'rand' => 'Random',
+					'date' => __( 'Most recently published', 'proper-widgets' ),
+					'modified' => __( 'Most recently changed', 'proper-widgets' ),
+					'comment_count' => __( 'Most commented', 'proper-widgets' ),
+					'rand' => __( 'Random', 'proper-widgets' ),
 				),
 				'default'     => 'date'
 			),
 			array(
-				'label'       => 'Order displayed posts by ...',
+				'label'       => __( 'Order displayed posts by ...', 'proper-widgets' ),
 				'type'        => 'select_assoc',
 				'id'          => 'orderby_final',
 				'description' => '',
 				'options' => array(
-					'date' => 'Publish date',
-					'modified' => 'Last change date',
-					'rand' => 'Random order',
-					'title' => 'Alphabetical by title',
-					'comment_count' => 'Comment count',
+					'date' => __( 'Publish date', 'proper-widgets' ),
+					'modified' => __( 'Last change date', 'proper-widgets' ),
+					'rand' => __( 'Random order', 'proper-widgets' ),
+					'title' => __( 'Alphabetical by title', 'proper-widgets' ),
+					'comment_count' => __( 'Comment count', 'proper-widgets' ),
 				),
 				'default'     => 'date'
 			),
@@ -167,33 +167,38 @@ class ProperPostsWidget extends WP_Widget {
 			}
 		}
 
-		proper_widget_wrap_html( $args, 'top', $instance['title'], $this->css_class );
+		proper_widget_wrap_top_html( $args, $instance['title'], $this->css_class );
 			
 		echo '<ul class="proper-posts-links proper-links-list links-category-'. $instance['category'].'">';
 
 		foreach ($the_posts as $a_post) {
 
 			$pid = $a_post->ID;
+			$permalink = esc_url( get_permalink( $pid ) );
+			$title = apply_filters( 'the_title', $a_post->post_title );
 
 			echo '<li>';
 
 			if ( $instance['show_thumb'] && has_post_thumbnail( $pid ) ) {
 				$align = 'align' . $instance['show_thumb'];
 				$thumb_size = $instance['show_thumb'] === 'center' ? 'medium' : 'thumbnail';
+				echo sprintf(
+					'<a href="%s" title="%s">',
+					$permalink,
+					esc_attr( $title )
+				);
 				echo get_the_post_thumbnail( $pid, $thumb_size, array(
-					'class' => $align,
-					'style' => 'max-width: 100%'
+					'class' => $align
 				) );
+				echo '</a>';
 			}
 
-			$permalink = get_permalink( $pid );
-			$title = apply_filters( 'the_title', $a_post->post_title );
-
-			echo '<p><a class="proper-headline-link" href="';
-			echo esc_url( $permalink );
-			echo '" title="';
-			echo esc_attr( $title );
-			echo '">' . $title . '</a>';
+			echo sprintf(
+				'<p><a class="proper-headline-link" href="%s" title="%s">%s</a>',
+				$permalink,
+				esc_attr( $title ),
+				$title
+			);
 
 			if ( $instance['show_date'] ) {
 				echo '<br><span class="proper-date">' . date_i18n(
@@ -210,7 +215,7 @@ class ProperPostsWidget extends WP_Widget {
 				if ( empty( $the_excerpt ) ) {
 					$the_excerpt = strip_tags( $a_post->post_content );
 				}
-				$the_excerpt = substr( $the_excerpt, 0, $instance['excerpt_len'] );
+				$the_excerpt = proper_widget_truncate( $the_excerpt, $instance['excerpt_len'] );
 				$the_excerpt = apply_filters( 'the_excerpt', $the_excerpt );
 				echo $the_excerpt;
 			}
@@ -220,7 +225,7 @@ class ProperPostsWidget extends WP_Widget {
 		}
 
 		echo '</ul>';
-		proper_widget_wrap_html( $args, 'bottom' );
+		proper_widget_wrap_bottom_html( $args );
 	}
 
 	/*

@@ -11,28 +11,28 @@ class ProperLinkedImageWidget extends WP_Widget {
 	function __construct() {
 		
 		$widget_ops = array( 'classname' => $this->css_class );
-		$this->WP_Widget( $this->css_class, 'PROPER Linked Image', $widget_ops);
+		$this->WP_Widget( $this->css_class, __( 'PROPER Linked Image', 'proper-widgets' ), $widget_ops);
 		
 		$this->widget_fields = array(
 			array(
-				'label' => 'Image URL',
+				'label' => __( 'Image URL', 'proper-widgets' ),
 				'type' => 'url',
 				'id' => 'image',
-				'description' => 'A direct link to an image',
+				'description' => __( 'A direct link to an image', 'proper-widgets' ),
 				'default' => '',
 			),
 			array(
-				'label' => 'Link to',
+				'label' => __( 'Link to', 'proper-widgets' ),
 				'type' => 'url',
 				'id' => 'link',
-				'description' => 'A direct link to where the clicked image will go',
+				'description' => __( 'A direct link to where the clicked image will go', 'proper-widgets' ),
 				'default' => '',
 			),
 			array(
-				'label' => 'Open link in new tab?',
+				'label' => __( 'Open link in new tab?', 'proper-widgets' ),
 				'type' => 'checkbox',
 				'id' => 'target',
-				'description' => 'Should the link open in a new tab?',
+				'description' => __( 'Should the link open in a new tab?', 'proper-widgets' ),
 				'default' => '',
 			),
 			
@@ -45,16 +45,20 @@ class ProperLinkedImageWidget extends WP_Widget {
 	 */
 	function widget($args, $instance) {
 
-		proper_widget_wrap_html( $args, 'top', $instance['title'], $this->css_class );
+		if ( empty( $instance['image'] ) ) {
+			return;
+		}
+
+		proper_widget_wrap_top_html( $args, '', $this->css_class );
 
 		echo sprintf(
 			'<a href="%s"%s><img src="%s"></a>',
-			! empty( $instance['target'] ) ? ' target="_blank"' : '',
 			esc_url( $instance['link'] ),
+			! empty( $instance['target'] ) ? ' target="_blank"' : '',
 			esc_url( $instance['image'] )
 		);
 
-		proper_widget_wrap_html( $args, 'bottom' );
+		proper_widget_wrap_bottom_html( $args );
 			
 	}
 

@@ -10,36 +10,37 @@ class ProperEmbedWidget extends WP_Widget {
 	function __construct() {
 		
 		$widget_ops = array( 'classname' => $this->css_class );
-		$this->WP_Widget( $this->css_class, 'PROPER Embed Widget', $widget_ops);
+		$this->WP_Widget( $this->css_class, __( 'PROPER Embed', 'proper-widgets' ), $widget_ops);
 
 		// Widget options
 		$this->widget_fields = array(
 			array(
-				'label' => 'Title',
+				'label' => __( 'Title', 'proper-widgets' ),
 				'type' => 'text',
 				'id' => 'title',
-				'description' => 'Enter a title for this widget or leave blank for no title',
+				'description' => __( 'Title for this widget or leave blank for none', 'proper-widgets' ),
 				'default' => ''
 			),
             array(
-                'label' => 'Embed URL',
+                'label' => __( 'Embed URL', 'proper-widgets' ),
                 'type' => 'url',
                 'id' => 'embed_url',
-                'description' => 'Enter a valid URL to an <a href="http://codex.wordpress.org/Embeds#Okay.2C_So_What_Sites_Can_I_Embed_From.3F" target="_blank">embeddable source</a>',
+                'description' => __( 'Enter a valid URL to an ', 'proper-widgets' ) .
+                	'<a href="http://codex.wordpress.org/Embeds#Okay.2C_So_What_Sites_Can_I_Embed_From.3F" target="_blank">' . __( 'embeddable source', 'proper-widgets' ) .'</a>',
                 'default' => ''
             ),
             array(
-                'label' => 'Width',
+                'label' => __( 'Width', 'proper-widgets' ),
                 'type' => 'number',
                 'id' => 'embed_w',
-                'description' => 'Enter a width, in pixels, for this video',
+                'description' => __( 'Enter a width, in pixels, for this media', 'proper-widgets' ),
                 'default' => 300
             ),
             array(
-                'label' => 'Height',
+                'label' => __( 'Height', 'proper-widgets' ),
                 'type' => 'number',
                 'id' => 'embed_h',
-                'description' => 'Enter a height, in pixels, for this video',
+                'description' => __( 'Enter a height, in pixels, for this media', 'proper-widgets' ),
                 'default' => 200
             ),
 		);
@@ -51,14 +52,14 @@ class ProperEmbedWidget extends WP_Widget {
 	 */
 	function widget($args, $instance) {
 
-		proper_widget_wrap_html( $args, 'top', $instance['title'], $this->css_class );
+		proper_widget_wrap_top_html( $args, $instance['title'], $this->css_class );
 
 		echo wp_oembed_get( $instance['embed_url'], array(
 			'width' => intval( $instance['embed_w'] ),
 			'height' => intval( $instance['embed_h'] )
 		) );
 
-		proper_widget_wrap_html( $args, 'bottom' );
+		proper_widget_wrap_bottom_html( $args );
 			
 	}
 

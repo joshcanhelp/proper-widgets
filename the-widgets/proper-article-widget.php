@@ -2,7 +2,7 @@
 
 class ProperArticleWidget extends WP_Widget {
 
-	private $allowed_tags = '<br><strong><em><a><b><em><hr><p><h1><h2><h3><h4><h5><h6>';
+	private $allowed_tags = '<br><strong><b><em><i><a><hr><p><h1><h2><h3><h4><h5><h6>';
 	private $css_class = 'proper-article-widget';
 
 	/*
@@ -11,43 +11,44 @@ class ProperArticleWidget extends WP_Widget {
 	function __construct() {
 
 		$widget_ops = array( 'classname' => $this->css_class );
-		$this->WP_Widget( $this->css_class, 'PROPER Article', $widget_ops );
+		$this->WP_Widget( $this->css_class, __( 'PROPER Article', 'proper-widgets' ) , $widget_ops );
 
 		// Widget options
 		$this->widget_fields = array(
 			array(
-				'label'       => 'Title *',
+				'label'       => __( 'Title', 'proper-widgets' ),
 				'type'        => 'text',
 				'id'          => 'title',
-				'description' => 'Enter a title for this widget or leave blank for no title',
+				'description' => __( 'Title for this widget or leave blank for none', 'proper-widgets' ),
 				'default'     => '',
 			),
 			array(
-				'label'       => 'Subtitle',
+				'label'       => __( 'Subitle', 'proper-widgets' ),
 				'type'        => 'text',
 				'id'          => 'subtitle',
-				'description' => 'Add an italic subtitle, if you\'d like',
+				'description' => __( 'Add an italic subtitle or leave blank for none', 'proper-widgets' ),
 				'default'     => '',
 			),
 			array(
-				'label'       => 'Body text',
+				'label'       => __( 'Body text', 'proper-widgets' ),
 				'type'        => 'textarea',
 				'id'          => 'body',
-				'description' => 'Main body of text. HTML allowed: br, strong, em, a, em, b, br',
+				'description' => __( 'Main body of text. HTML allowed: ', 'proper-widgets' )  .
+					htmlentities( $this->allowed_tags ),
 				'default'     => '',
 			),
 			array(
-				'label'       => 'Read More link text',
+				'label'       => __( 'Link text to read more', 'proper-widgets' ),
 				'type'        => 'text',
 				'id'          => 'link_text',
-				'description' => 'Text to display for the link added below',
+				'description' => __( 'Text to display for the link added below', 'proper-widgets' ) ,
 				'default'     => 'Read More &raquo;',
 			),
 			array(
-				'label'       => 'Read More link URL',
+				'label'       => __( 'URL to read more', 'proper-widgets' ),
 				'type'        => 'url',
 				'id'          => 'link',
-				'description' => 'Add a link here to display after the blurb',
+				'description' => __( 'Add a link here to display after the blurb', 'proper-widgets' ) ,
 				'default'     => '',
 			),
 
@@ -68,7 +69,7 @@ class ProperArticleWidget extends WP_Widget {
 		$link_text = sanitize_text_field( $instance['link_text'] );
 		$link      = esc_url( $instance['link'] );
 
-		proper_widget_wrap_html( $args, 'top', $instance['title'], $this->css_class );
+		proper_widget_wrap_top_html( $args, $instance['title'], $this->css_class );
 
 		if ( ! empty( $subtitle ) ) {
 			echo '<p class="proper-subtitle"><em>' . $subtitle . '</em></p>';
@@ -79,11 +80,11 @@ class ProperArticleWidget extends WP_Widget {
 		}
 
 		if ( ! empty( $link ) ) {
-			$link_text = ! empty( $link_text ) ? $link_text : __( 'Read More &raquo;', 'proper-widgets' );
+			$link_text = ! empty( $link_text ) ? $link_text : '#';
 			echo '<a href="' . $link . '" class="read-more">' . $link_text . '</a>';
 		}
 
-		proper_widget_wrap_html( $args, 'bottom' );
+		proper_widget_wrap_bottom_html( $args );
 
 	}
 

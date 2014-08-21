@@ -10,64 +10,59 @@ class ProperRssWidget extends WP_Widget {
 	function __construct() {
 
 		$widget_ops = array( 'classname' => $this->css_class );
-		$this->WP_Widget( $this->css_class, 'PROPER RSS', $widget_ops );
+		$this->WP_Widget( $this->css_class, __( 'PROPER RSS', 'proper-widgets' ), $widget_ops );
 
 		// Widget options
 		$this->widget_fields = array(
 			array(
-				'label'       => 'Title',
+				'label'       => __( 'Title', 'proper-widgets' ),
 				'type'        => 'text',
 				'id'          => 'title',
-				'description' => 'Enter a title for this widget or leave blank for no title',
+				'description' => __( 'Title for this widget or leave blank for none', 'proper-widgets' ),
 				'default'     => 'RSS Feed',
 			),
 			array(
-				'label'       => 'RSS URL',
+				'label'       => __( 'RSS URL', 'proper-widgets' ),
 				'type'        => 'url',
 				'id'          => 'rss_url',
-				'description' => 'A direct link to a valid RSS or ATOM feed',
+				'description' => __( 'A direct link to a valid RSS or ATOM feed', 'proper-widgets' ),
 				'default'     => ''
 			),
 			array(
-				'label'       => '# of items to show',
+				'label'       => __( '# of items to show', 'proper-widgets' ),
 				'type'        => 'number',
 				'id'          => 'num_posts',
-				'description' => '',
 				'default'     => get_option( 'posts_per_page' ),
 			),
 			array(
-				'label'       => 'Show blurb (if available)?',
+				'label'       => __( 'Show blurb (if available)', 'proper-widgets' ),
 				'type'        => 'checkbox',
 				'id'          => 'show_blurb',
-				'description' => '',
-				'default'     => 'yes',
+				'default'     => 1,
 			),
 			array(
-				'label'       => 'Show date (if available)?',
+				'label'       => __( 'Show date (if available)', 'proper-widgets' ),
 				'type'        => 'checkbox',
 				'id'          => 'show_date',
-				'description' => '',
-				'default'     => 'yes',
+				'default'     => 1,
 			),
 			array(
-				'label'       => 'Open links in a new tab?',
+				'label'       => __( 'Open links in a new tab', 'proper-widgets' ),
 				'type'        => 'checkbox',
 				'id'          => 'target',
-				'description' => '',
-				'default'     => 'yes',
+				'default'     => 1,
 			),
 			array(
-				'label'       => 'Add rel="nofollow" to links?',
+				'label'       => __( 'Add rel="nofollow" to links?', 'proper-widgets' ),
 				'type'        => 'checkbox',
 				'id'          => 'link_rel',
-				'description' => '',
-				'default'     => 'yes',
+				'default'     => 1,
 			),
 			array(
-				'label'       => 'Cache duration (minutes)',
+				'label'       => __( 'Cache duration (minutes)', 'proper-widgets' ),
 				'type'        => 'number',
 				'id'          => 'cache_duration',
-				'description' => 'How long should this feed be cached? A longer cache will lead to a faster page load',
+				'description' => __( 'How long should this feed be cached? A longer cache will lead to a faster page load', 'proper-widgets' ),
 				'default'     => 30,
 			),
 
@@ -120,24 +115,25 @@ class ProperRssWidget extends WP_Widget {
 		// Get the feed and check for content
 		$feed_content = proper_widget_fetch_rss( $feed_args );
 		if ( ! is_array( $feed_content ) || ! count( $feed_content ) > 0 ) {
-			echo '<!-- PROPER RSS widget found no content at URL ' . $feed_args['url'] . '-->';
+			echo '<!-- ' . __( 'PROPER RSS widget found no content at URL', 'proper-widgets' ) . ': ' . $feed_args['url'] . '-->';
 			return;
 		}
 
-		proper_widget_wrap_html( $args, 'top', $instance['title'], $this->css_class );
+		proper_widget_wrap_top_html( $args, $instance['title'], $this->css_class );
 
 		echo '<ul class="proper-feed-links proper-links-list">';
 
 		foreach ( $feed_content as $item ) {
 
 			echo '<li><p>';
-			echo '<a href="';
-			echo esc_url( $item['link'] );
-			echo '" title="';
-			echo esc_attr( $item['title'] );
-			echo '" rel="nofollow"' . $link_insert . '>';
-			echo apply_filters( 'the_title', $item['title'] );
-			echo '</a>';
+
+			echo sprintf(
+				'<a href="%s" title="%s" %s>%s</a>',
+				esc_url( $item['link'] ),
+				esc_attr( $item['title'] ),
+				$link_insert,
+				apply_filters( 'the_title', $item['title'] )
+			);
 
 			if ( $feed_args['get_date'] ) {
 				echo '<br><span class="proper-date">' . $item['date'] . '</span>';
@@ -153,7 +149,7 @@ class ProperRssWidget extends WP_Widget {
 		}
 
 		echo '</ul>';
-		proper_widget_wrap_html( $args, 'bottom' );
+		proper_widget_wrap_bottom_html( $args );
 	}
 
 	/*
