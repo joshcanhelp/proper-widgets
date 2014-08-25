@@ -142,27 +142,23 @@ class ProperPostsWidget extends WP_Widget {
 		if ( $orderby !== $instance['orderby_final'] ) {
 			switch ( $instance['orderby_final'] ) {
 				case 'date':
-					usort( $the_posts, function ($a, $b) {
-						return $a->post_date < $b->post_date;
-					});
+					usort( $the_posts, array( $this, 'usort_published' ) );
 					break;
+
 				case 'modified':
-					usort( $the_posts, function ( $a, $b ) {
-						return $a->post_modified < $b->post_modified;
-					} );
+					usort( $the_posts, array( $this, 'usort_modified' ) );
 					break;
+
+				case 'title':
+					usort( $the_posts, array( $this, 'usort_title' ) );
+					break;
+
+				case 'comment_count':
+					usort( $the_posts, array( $this, 'usort_comments' ) );
+					break;
+
 				case 'rand':
 					shuffle( $the_posts );
-					break;
-				case 'title':
-					usort( $the_posts, function  ($a, $b) {
-						return strcmp( $a->post_title, $b->post_title );
-					});
-					break;
-				case 'comment_count':
-					usort( $the_posts, function ( $a, $b ) {
-						return $a->comment_count > $b->comment_count;
-					} );
 					break;
 			}
 		}
@@ -261,6 +257,25 @@ class ProperPostsWidget extends WP_Widget {
 		endfor;
 		proper_widget_output_fields($this->widget_fields, $instance);
 
+	}
+
+	/**
+	 * Sorting functions used by usort
+	 */
+	private function usort_published ( $a, $b ) {
+		return $a->post_date < $b->post_date;
+	}
+
+	private function usort_modified ( $a, $b ) {
+		return $a->post_modified < $b->post_modified;
+	}
+
+	private function usort_title ( $a, $b ) {
+		return strcmp( $a->post_title, $b->post_title );
+	}
+
+	private function usort_comments ( $a, $b ) {
+		return $a->comment_count > $b->comment_count;
 	}
 }
 
