@@ -4,7 +4,7 @@ Donate link: http://theproperweb.com/product/proper-widgets/
 Tags: widgets, posts widget, links widget, rss widget, google news widget, author widget, users widget
 Requires at least: 3.0
 Tested up to: 4.0
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 
 Creates easy-to-use, helpful widgets
 
@@ -41,6 +41,9 @@ Activating the Proper Widgets plugin is just like any other plugin. If you've up
 6. Simply drag a widget to a widget location, configure, and save
 
 == Changelog ==
+
+= 1.0.1 =
+* Fixed issue with Posts widget in PHP 5.2
 
 = 1.0.0 =
 * Added the Author widget

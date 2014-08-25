@@ -4,7 +4,7 @@
 Plugin Name: PROPER Widgets
 Plugin URI: http://theproperweb.com/product/proper-widgets/
 Description: More widgets than you can shake a stick at.
-Version: 1.0.0
+Version: 1.0.1
 Author: PROPER Web Development
 Author URI: http://theproperweb.com
 License: GPLv2 or later
@@ -12,7 +12,7 @@ Text Domain: proper-widgets
 */
 
 // Constants
-define( 'PROPER_WIDGETS_VERSION', '1.0.0' );
+define( 'PROPER_WIDGETS_VERSION', '1.0.1' );
 define( 'PROPER_WIDGETS_MINIMUM_WP_VERSION', '3.0' );
 define( 'PROPER_WIDGETS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'PROPER_WIDGETS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
