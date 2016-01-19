@@ -4,7 +4,7 @@
 Plugin Name: PROPER Widgets
 Plugin URI: http://theproperweb.com/product/proper-widgets/
 Description: More widgets than you can shake a stick at.
-Version: 1.0.1
+Version: 1.0.2
 Author: PROPER Web Development
 Author URI: http://theproperweb.com
 License: GPLv2 or later
@@ -18,7 +18,9 @@ define( 'PROPER_WIDGETS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'PROPER_WIDGETS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 // Core files
+
 require_once( PROPER_WIDGETS_PLUGIN_DIR . 'inc/plugin-settings.php' );
+
 if ( ! class_exists( 'PhpFormBuilder' ) ) {
 	require_once( PROPER_WIDGETS_PLUGIN_DIR . 'inc/PhpFormBuilder.php' );
 }
