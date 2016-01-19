@@ -9,8 +9,13 @@ class ProperPostsWidget extends WP_Widget {
 	 */
 	function __construct() {
 		
-		$widget_ops = array( 'classname' => $this->css_class );
-		$this->WP_Widget( 'proper-posts-widget', __( 'PROPER Posts', 'proper-widgets' ), $widget_ops);
+		parent::__construct(
+			$this->css_class,
+			__( 'PROPER Posts', 'proper-widgets' ),
+			array(
+				'classname' => $this->css_class,
+			)
+		);
 		
 		// Get post categories
 		$categories = get_categories(array (

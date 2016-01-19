@@ -12,7 +12,7 @@ Text Domain: proper-widgets
 */
 
 // Constants
-define( 'PROPER_WIDGETS_VERSION', '1.0.1' );
+define( 'PROPER_WIDGETS_VERSION', '1.0.2' );
 define( 'PROPER_WIDGETS_MINIMUM_WP_VERSION', '3.0' );
 define( 'PROPER_WIDGETS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'PROPER_WIDGETS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );

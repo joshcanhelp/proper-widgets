@@ -8,9 +8,14 @@ class ProperEmbedWidget extends WP_Widget {
 	private $css_class = 'proper-embed-widget';
 	
 	function __construct() {
-		
-		$widget_ops = array( 'classname' => $this->css_class );
-		$this->WP_Widget( $this->css_class, __( 'PROPER Embed', 'proper-widgets' ), $widget_ops);
+
+		parent::__construct(
+			$this->css_class,
+			__( 'PROPER Embed', 'proper-widgets' ),
+			array(
+				'classname' => $this->css_class,
+			)
+		);
 
 		// Widget options
 		$this->widget_fields = array(

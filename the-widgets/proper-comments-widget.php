@@ -9,8 +9,13 @@ class ProperCommentsWidget extends WP_Widget {
 	 */
 	function __construct() {
 
-		$widget_ops = array( 'classname' => $this->css_class );
-		$this->WP_Widget( $this->css_class, __( 'PROPER Comments', 'proper-widgets' ), $widget_ops );
+		parent::__construct(
+			$this->css_class,
+			__( 'PROPER Comments', 'proper-widgets' ),
+			array(
+				'classname' => $this->css_class,
+			)
+		);
 
 		// Widget options
 		$this->widget_fields = array(

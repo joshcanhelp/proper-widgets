@@ -10,8 +10,13 @@ class ProperLinkedImageWidget extends WP_Widget {
 	 */
 	function __construct() {
 		
-		$widget_ops = array( 'classname' => $this->css_class );
-		$this->WP_Widget( $this->css_class, __( 'PROPER Linked Image', 'proper-widgets' ), $widget_ops);
+		parent::__construct(
+			$this->css_class,
+			__( 'PROPER Linked Image', 'proper-widgets' ),
+			array(
+				'classname' => $this->css_class,
+			)
+		);
 		
 		$this->widget_fields = array(
 			array(

@@ -9,8 +9,13 @@ class ProperLinksWidget extends WP_Widget {
 	 */
 	function __construct() {
 
-		$widget_ops = array( 'classname' => $this->css_class );
-		$this->WP_Widget( $this->css_class, __( 'PROPER Links', 'proper-widgets' ), $widget_ops );
+		parent::__construct(
+			$this->css_class,
+			__( 'PROPER Links', 'proper-widgets' ),
+			array(
+				'classname' => $this->css_class,
+			)
+		);
 
 		// Get link categories
 		$categories = get_categories( array(

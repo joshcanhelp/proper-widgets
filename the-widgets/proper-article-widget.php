@@ -10,8 +10,13 @@ class ProperArticleWidget extends WP_Widget {
 	 */
 	function __construct() {
 
-		$widget_ops = array( 'classname' => $this->css_class );
-		$this->WP_Widget( $this->css_class, __( 'PROPER Article', 'proper-widgets' ) , $widget_ops );
+		parent::__construct(
+			$this->css_class,
+			__( 'PROPER Article', 'proper-widgets' ),
+			array(
+				'classname' => $this->css_class,
+			)
+		);
 
 		// Widget options
 		$this->widget_fields = array(
